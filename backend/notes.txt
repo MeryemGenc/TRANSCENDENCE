@@ -1,0 +1,28 @@
+
+******************* DATA
+gamers & game_skor:  ["deplasman", "misafir"]
+turnuva_id = 0 : default, turnuva oyunu değil.
+Turnuvayi geçmişe eklemicez.
+
+
+
+
+
+******************* HATA
+Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received -> google uzantilar yüzünden çikiyo. Gizli sekmede hata vermez.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

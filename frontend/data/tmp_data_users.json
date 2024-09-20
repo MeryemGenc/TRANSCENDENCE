@@ -1,0 +1,53 @@
+{
+    "users": 
+    [
+        {
+            "user_id": 123,
+            "user_name": "mgencali",
+            "user_nickname": "mgencali",
+            "user_avatar": "mgencali",
+            "user_2fa": true,
+            "user_activation": true,
+            "user_friends": ["rcalik", "sguntepe", "caner"],
+            "user_win_count": 4,
+            "user_lose_count": 6,
+            "user_draw_count": 2
+        }, 
+        {
+            "user_id": 124,
+            "user_name": "rcalik",
+            "user_nickname": "rcalik",
+            "user_avatar": "rcalik",
+            "user_2fa": true,
+            "user_activation": false,
+            "user_friends": ["mgencali", "sguntepe", "caner"],
+            "user_win_count": 6,
+            "user_lose_count": 7,
+            "user_draw_count": 8
+        }, 
+        {
+            "user_id": 125,
+            "user_name": "sguntepe",
+            "user_nickname": "sguntepe",
+            "user_avatar": "sguntepe",
+            "user_2fa": false,
+            "user_activation": true,
+            "user_friends": ["rcalik", "mgencali", "caner"],
+            "user_win_count": 4,
+            "user_lose_count": 3,
+            "user_draw_count": 1
+        }, 
+        {
+            "user_id": 126,
+            "user_name": "caner",
+            "user_nickname": "caner",
+            "user_avatar": "caner",
+            "user_2fa": false,
+            "user_activation": false,
+            "user_friends": ["rcalik", "sguntepe", "mgencali"],
+            "user_win_count": 7,
+            "user_lose_count": 5,
+            "user_draw_count": 6
+        } 
+    ]
+}

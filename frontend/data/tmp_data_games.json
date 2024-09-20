@@ -1,0 +1,30 @@
+{
+    "games": 
+    [
+        {
+            "game_id": 355,
+            "game_name": "ping-pong",
+            "gamers": ["rcalik", "sguntepe"], 
+            "game_skor": [4, 3]
+        }, 
+        {
+            "game_id": 356,
+            "game_name": "ping-pong",
+            "gamers": ["rcalik", "caner"], 
+            "game_skor": [3, 8]
+        }, 
+        {
+            "game_id": 357,
+            "game_name": "ping-pong",
+            "gamers": ["caner", "sguntepe"], 
+            "game_skor": [6, 7]
+        }, 
+        {
+            "game_id": 358,
+            "game_name": "ping-pong",
+            "gamers": ["rcalik", "mgencali"], 
+            "game_skor": [5, 3]
+        }
+    ]
+}
+
