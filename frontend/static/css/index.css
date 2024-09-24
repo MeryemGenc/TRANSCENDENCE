@@ -5,20 +5,17 @@ html, body {
 }
 
 body {
-    --nav-width: 200px;
-    margin: 0 0 0 var(--nav-width);
     font-family: 'Quicksand', sans-serif;
     font-size: 18px; 
 }
 
-.nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--nav-width);
-    height: 100vh;
-    background: #222222;
+.container-fluid{
+    padding: 0;
+    /* .row {
+        width: 250px;
+    } */
 }
+
 
 .nav__link {
     display: block;
@@ -41,9 +38,6 @@ body {
 a {
     color: #009579;
 }
-
-
-
 
 
 
