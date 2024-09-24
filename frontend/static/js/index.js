@@ -64,7 +64,7 @@ window.addEventListener("popstate", router);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
-        if (e.target.matches("[data-link")) { // sayfa refresh edilmesin diye. nasıl edilmedi ki ???// data-link kapanma parantezi YOK_BAK!!!
+        if (e.target.matches("[data-link]")) { // sayfa refresh edilmesin diye. nasıl edilmedi ki ???// data-link kapanma parantezi YOK_BAK!!!
             e.preventDefault(); // bu ne ???
             navigateTo(e.target.href);
         }
