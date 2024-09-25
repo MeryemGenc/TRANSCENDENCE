@@ -11,4 +11,4 @@ app.get("/*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "index.html"));
 });
 
-app.listen(process.env.PORT || 8888, () => console.log("Server OK... Go localhost:88888"));
+app.listen(process.env.PORT || 8888, () => console.log("Server OK... Go http://localhost:88888"));
