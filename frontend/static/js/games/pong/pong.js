@@ -1,6 +1,9 @@
-import { setGameRunning, getGameRunning}  from "./../../index.js"
-import { post_game_score }  from "./../../api.js"
-import { navigateTo } from "./../../index.js";
+import { setGameRunning, getGameRunning}  from "../../index.js"
+import { post_game_score }  from "../../api.js"
+import { navigateTo } from "../../index.js";
+
+
+
 
 
 
@@ -51,6 +54,13 @@ let ball = {
     velocityY: 3
 }
 
+let keys = {}; 
+function keyDownHandler(e) { // tuşlara basıldığında ilgili tuşun durumunu true yap
+    keys[e.code] = true; }
+
+function keyUpHandler(e) { // tuşlar bırakıldığında ilgili tuşun durumunu false yap
+    keys[e.code] = false; }
+
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
         if (e.target.matches("#pong_play_button")) { navigateTo('/pong'); }
@@ -68,15 +78,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
 function startGame() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
     context = board.getContext("2d");
-
+    
     setGameRunning(true); // Oyun durumu aktif
     requestAnimationFrame(update);
-
+    
     document.addEventListener("keydown", keyDownHandler);
     document.addEventListener("keyup", keyUpHandler);
 }
@@ -105,40 +116,59 @@ export function stopGame() {
         player2Score = 0;
         
         document.getElementById("pong_play_button2").style.display = 'block';
+
+        keys = {};
+        document.removeEventListener("keydown", keyDownHandler);
+        document.removeEventListener("keyup", keyUpHandler);
     }
 }
 
-// Her frame'de çağırılır
 function update() {
     if (!getGameRunning()) return; // Oyun durduysa update etmeyi bırak
 
     requestAnimationFrame(update);
     context.clearRect(0, 0, board.width, board.height); // önceki çizimi siler
 
-    // player1
-    let nextPlayer1Y = player1.y + player1.velocityY;
-    if (!outOfBounds(nextPlayer1Y)) {
-        player1.y = nextPlayer1Y;
+    // player1 hareketi
+    if (keys["KeyW"]) {
+        let nextPlayer1Y = player1.y - playerSpeed;
+        if (!outOfBounds(nextPlayer1Y)) {
+            player1.y = nextPlayer1Y;
+        }
+    } else if (keys["KeyS"]) {
+        let nextPlayer1Y = player1.y + playerSpeed;
+        if (!outOfBounds(nextPlayer1Y)) {
+            player1.y = nextPlayer1Y;
+        }
     }
+    context.fillStyle = "white";
     context.fillRect(player1.x, player1.y, player1.width, player1.height);
 
-    // player2
-    let nextPlayer2Y = player2.y + player2.velocityY;
-    if (!outOfBounds(nextPlayer2Y)) {
-        player2.y = nextPlayer2Y;
+    // player2 hareketi
+    if (keys["ArrowUp"]) {
+        let nextPlayer2Y = player2.y - playerSpeed;
+        if (!outOfBounds(nextPlayer2Y)) {
+            player2.y = nextPlayer2Y;
+        }
+    } else if (keys["ArrowDown"]) {
+        let nextPlayer2Y = player2.y + playerSpeed;
+        if (!outOfBounds(nextPlayer2Y)) {
+            player2.y = nextPlayer2Y;
+        }
     }
+    context.fillStyle = "white";
     context.fillRect(player2.x, player2.y, player2.width, player2.height);
 
-    // score control
-    if (player1Score >=3 || player2Score >= 3) {
+    // score kontrol
+    if (player1Score >= 3 || player2Score >= 3) {
         stopGame();
         return;
     }
-    
-    // ball
-    context.fillStyle = "white";
+
+    // top hareketi ve diğer işlemler...
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
+    context.fillStyle = "white";
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     // topun canvasa çarpması
@@ -159,7 +189,7 @@ function update() {
         }
     }
 
-    // game over
+    // game over kontrolü
     if (ball.x < 0) {
         player2Score++;
         resetGame(1);
@@ -168,7 +198,7 @@ function update() {
         resetGame(-1);
     }
 
-    // score
+    // score gösterimi
     context.font = "45px sans-serif";
     context.fillText(player1Score, boardWidth / 5, 45);
     context.fillText(player2Score, boardWidth * 4 / 5 - 45, 45);
@@ -179,39 +209,10 @@ function update() {
     }
 }
 
+
 // playerların ekranın dışına çıkmasını engellemek
 function outOfBounds(yPosition) {
     return yPosition < 0 || yPosition + playerHeight > boardHeight;
-}
-
-// tuşlara basıldığında hız ayarla
-function keyDownHandler(e) {
-    // player 1
-    if (e.code === "KeyW") {
-        player1.velocityY = -playerSpeed;
-    } else if (e.code === "KeyS") {
-        player1.velocityY = playerSpeed;
-    }
-
-    // player 2
-    if (e.code === "ArrowUp") {
-        player2.velocityY = -playerSpeed;
-    } else if (e.code === "ArrowDown") {
-        player2.velocityY = playerSpeed;
-    }
-}
-
-// tuşlar bırakıldığında hızı sıfırla
-function keyUpHandler(e) {
-    // player 1
-    if (e.code === "KeyW" || e.code === "KeyS") {
-        player1.velocityY = 0;
-    }
-
-    // player 2
-    if (e.code === "ArrowUp" || e.code === "ArrowDown") {
-        player2.velocityY = 0;
-    }
 }
 
 // çarpışmayı tespit et
