@@ -9,6 +9,7 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <button id="pong_play_button" type="button">PLAY PONG</button>
+            <button id="tictactoe_play_button" type="button">PLAY TICTACTOE</button>
         `;
     }
 }

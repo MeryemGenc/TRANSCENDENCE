@@ -1,6 +1,5 @@
 import { setGameRunning, getGameRunning}  from "../../index.js"
 import { post_game_score }  from "../../api.js"
-import { navigateTo } from "../../index.js";
 
 
 
@@ -61,12 +60,6 @@ function keyDownHandler(e) { // tuşlara basıldığında ilgili tuşun durumunu
 function keyUpHandler(e) { // tuşlar bırakıldığında ilgili tuşun durumunu false yap
     keys[e.code] = false; }
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener("click", e => {
-        if (e.target.matches("#pong_play_button")) { navigateTo('/pong'); }
-    });
-});
-
 
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
@@ -79,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-function startGame() {
+function startGame() {    
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
