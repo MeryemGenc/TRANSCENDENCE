@@ -12,6 +12,8 @@ export default class extends AbstractView {
                 <canvas id="board"></canvas>
                 <button id="pong_play_button2" type="button">PLAY</button>
             </div>
+            
+            <script type="module" src="/static/js/games/pong/pong.js"></script> 
         `;
     }
 }
