@@ -1,0 +1,91 @@
+body {
+    margin: 0; /* Tarayıcı varsayılan margin'ini kaldır */
+    background-color: black; /* Arka plan rengi */
+}
+
+.container_pong_3d {
+    background-color: black;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;   
+}
+
+.wrap_pong_3d {
+    width: 710px;
+    height: 510px;
+    background: linear-gradient(to right, green, purple); /* farklı tarayıcılar için de eklenmeli.*/
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board_3d {
+    background-color: black;
+    width: 700px;
+    height: 500px;
+    display: block;
+    border: 2px  black; /* Tahta etrafında sarı çerçeve */
+}
+
+#pong_3d_play_button2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: red; /* Başlangıç rengi kırmızı */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2); /* Hafif gölge */
+}
+
+#pong_3d_play_button2:hover {
+    background-color: blue; /* Üzerine gelindiğinde mavi */
+    transition: background-color 0.3s ease; /* Renk geçişi efekti */
+}
+
+
+
+
+
+
+
+
+/* .container_pong_3d {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;   
+}
+
+#board_3d {
+    background-color: black;
+    width: 550px;
+    height: 550px;
+    display: block;
+}
+
+#pong_3d_play_button2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #00BFFF;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#pong_3d_play_button2:hover {
+    background-color: #008CBA; 
+} */

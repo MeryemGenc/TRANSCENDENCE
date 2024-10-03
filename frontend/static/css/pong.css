@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 .container_pong {
     position: relative;
     display: flex;
@@ -39,20 +30,3 @@
 #pong_play_button2:hover {
     background-color: #008CBA; 
 }
-
-
-
-/* .container_pong {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;   
-}
-
-
-
-#board {
-    background-color: black;
-    width: 500px;
-    height: 500px;
-} */
