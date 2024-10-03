@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "htmlnano": "^2.1.1",
+    "srcset": "^5.0.1"
   }
 }

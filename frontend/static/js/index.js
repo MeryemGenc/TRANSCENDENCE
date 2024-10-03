@@ -2,11 +2,13 @@
 import Dashboard from "./views/Dashboard.js";
 import Games from "./views/Games.js";
 import Pong from "./views/Pong.js";
+import Pong3d from "./views/Pong3d.js";
 import Tictactoe from "./views/Tictactoe.js";
 import Settings from "./views/Settings.js";
 import Friends from "./views/Friends.js";
 import Login from "./views/Login.js";
 import {stopGame} from "./games/pong/pong.js";
+import {stopGame_3d} from "./games/pong3d/pong3d.js";
 import {ttt_stopGame} from "./games/tictactoe/tictactoe.js";
 
 
@@ -14,6 +16,11 @@ import {ttt_stopGame} from "./games/tictactoe/tictactoe.js";
 let gameRunning = false; // Oyun durumunu takip etmek için
 export function setGameRunning(value) { gameRunning = value; }
 export function getGameRunning() { return gameRunning; }
+
+// PONG3D - game running-stop durumu
+let gameRunning_3d = false; // Oyun durumunu takip etmek için
+export function setGameRunning_3d(value) { gameRunning_3d = value; }
+export function getGameRunning_3d() { return gameRunning_3d; }
 
 // TICTACTOE - game running-stop durumu
 let ttt_gameRunning = false; // Oyun durumunu takip etmek için
@@ -26,12 +33,18 @@ export const navigateTo = url => {
 };
 
 const router = async () => {
-    console.log("gamerunning: " + gameRunning); // silinecek
-    console.log("ttt_gamerunning: " + ttt_gameRunning);
+    // console.log("gamerunning: " + gameRunning); 
+    // console.log("ttt_gamerunning: " + ttt_gameRunning);
     if (ttt_gameRunning)
         ttt_stopGame();
     if (gameRunning)
         stopGame();
+    if (gameRunning_3d)
+        {
+        console.log("gamerunning_3d: game durdu");
+
+        stopGame_3d();
+    }
 
 
     const routes = [
@@ -39,6 +52,7 @@ const router = async () => {
         { path: "/login", view: Login },
         { path: "/games", view: Games },
         { path: "/pong", view: Pong },
+        { path: "/pong3d", view: Pong3d },
         { path: "/tictactoe", view: Tictactoe },
         { path: "/settings", view: Settings },
         { path: "/friends", view: Friends }
@@ -64,20 +78,19 @@ const router = async () => {
     const view = new match.route.view();
     document.querySelector("#app").innerHTML = await view.getHtml();
     // console.log(match.route.view());
-
 };
 
 window.addEventListener("popstate", router);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
-        if (e.target.matches("[data-link]")) { // sayfa refresh edilmesin diye. nasıl edilmedi ki ???// data-link kapanma parantezi YOK_BAK!!!
+        if (e.target.matches("[data-link]")) { // sayfa refresh edilmesin diye. nasıl edilmedi ki ???
             e.preventDefault(); // bu ne ???
             navigateTo(e.target.href); 
         }
     });
 
-    router(); // zaten navigateTo da router() kullanmıyo muyum . 1.bu neden burada. 2. üstteki kod neden tekrar buraya geliyor?
+    router(); // zaten navigateTo da router() kullanıyorum . 1.bunu neden buraya koydum ya da üstteki kod neden tekrar buraya geliyor? BAK !!!
 });
 
 

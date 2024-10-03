@@ -1,4 +1,4 @@
-import { ttt_setGameRunning, ttt_getGameRunning}  from "../../index.js" // duruma göre burdki "running" silinebilir
+import { ttt_setGameRunning, ttt_getGameRunning}  from "../../index.js" 
 
 
 const winConditions = [
@@ -12,8 +12,7 @@ const winConditions = [
     [2, 4, 6]
 ];
 let options = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
-let running = false;
+let currentPlayer = "X"; 
 
 
 let cells;
@@ -35,28 +34,26 @@ function initializeGame(){
     tictactoeRestartBtn = document.querySelector("#tictactoeRestartBtn");
 
     cells.forEach(cell => {
-        cell.style.color = "white"; // Hücre metinlerini beyaz yap
-        cell.style.borderColor = "white"; // Hücre kenarlıklarını beyaz yap
+        cell.style.color = "white";
+        cell.style.borderColor = "white";
     });
     
-    tictactoeStatusText.style.color = "white"; // Oyun durumu yazısını beyaz yap
-    tictactoeRestartBtn.style.color = "white"; // Yeniden başlat butonunun yazı rengi beyaz
-    tictactoeRestartBtn.style.borderColor = "white"; // Butonun kenarlıklarını beyaz yap
+    tictactoeStatusText.style.color = "white";
+    tictactoeRestartBtn.style.color = "white";
+    tictactoeRestartBtn.style.borderColor = "white";
     
     cells.forEach(cell => cell.addEventListener("click", cellClicked));
     tictactoeRestartBtn.addEventListener("click", ttt_restartGame);
     tictactoeStatusText.textContent = `${currentPlayer}'s turn`;
     ttt_setGameRunning(true);
-    running = true;
 }
 
 function cellClicked(){
     const tictactoe_cell_Index = this.getAttribute("tictactoe_cell_Index");
 
-    if(options[tictactoe_cell_Index] != "" || !running){
+    if(options[tictactoe_cell_Index] != "" || !ttt_getGameRunning()){
         return;
     }
-
     updateCell(this, tictactoe_cell_Index);
     checkWinner();
 }
@@ -92,12 +89,10 @@ function checkWinner(){
     if(roundWon){
         tictactoeStatusText.textContent = `${currentPlayer} wins!`;
         ttt_setGameRunning(false);
-        running = false;
     }
     else if(!options.includes("")){
         tictactoeStatusText.textContent = `Draw!`;
         ttt_setGameRunning(false);
-        running = false;
     }
     else{
         changePlayer();
@@ -110,7 +105,6 @@ function ttt_restartGame(){
     tictactoeStatusText.textContent = `${currentPlayer}'s turn`;
     cells.forEach(cell => cell.textContent = "");
     ttt_setGameRunning(true);
-    running = true;
 }
 
 export function ttt_stopGame(){
@@ -121,10 +115,9 @@ export function ttt_stopGame(){
     tictactoeStatusText.textContent = `Game is Done`;
     cells.forEach(cell => cell.textContent = "");
     
-    // cells.forEach(cell => cell.addEventListener("click", cellClicked)); // sorun olacaksa kaldır.
-    // tictactoeRestartBtn.addEventListener("click", ttt_restartGame);
+    cells.forEach(cell => cell.removeEventListener("click", cellClicked));
+    tictactoeRestartBtn.removeEventListener("click", ttt_restartGame);
 
     document.getElementById("tictactoeStartBtn").style.display = 'block';
-    running = false;
 }
 
