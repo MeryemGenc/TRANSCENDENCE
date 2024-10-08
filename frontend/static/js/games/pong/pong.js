@@ -1,7 +1,5 @@
 import { setGameRunning, getGameRunning}  from "../../index.js"
-import { post_game_score }  from "../../api.js"
-
-
+import { post_game_score }  from "../../api.js"   
 
 
 
@@ -69,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 
 
 

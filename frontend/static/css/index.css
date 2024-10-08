@@ -1,4 +1,4 @@
-html, body {
+/* html, body {
     overflow: hidden; 
     margin: 0;
     padding: 0;
@@ -13,8 +13,8 @@ body {
     padding: 0;
     /* .row {
         width: 250px;
-    } */
-}
+    } 
+}*/
 
 
 .nav__link {
@@ -40,5 +40,70 @@ a {
 }
 
 
+
+ */
+
+
+
+ html,
+ body {
+     margin: 0;
+     padding: 0;
+ }
+ 
+ body {
+     font-family: 'Quicksand', sans-serif;
+     font-size: 18px;
+ }
+ 
+ .container-fluid {
+     padding: 0;
+     /* .row {
+         width: 250px;
+     } */
+ }
+ 
+ 
+ .nav__link {
+     display: block;
+     padding: 12px 18px;
+     text-decoration: none;
+     color: #eeeeee;
+     font-weight: 500;
+ }
+ 
+ .nav__link:hover {
+     background: rgba(255, 255, 255, 0.05);
+ }
+ 
+ #app {
+     /* margin: 2em; */
+     line-height: 1.5;
+     font-weight: 500;
+ }
+ 
+ a {
+     color: #009579;
+ }
+ 
+ /*rabia ekledi!!!!!!!*/
+ .transparent-item {
+     background-color: rgba(255, 255, 255, 0);
+     /* Saydam arka plan */
+     border: none;
+     /* Kenarlık kaldırmak*/
+ }
+ 
+ .small-img {
+     width: 70px;
+     height: auto;
+ }
+ 
+ .background-gradient {
+     height: 100vh;
+     width: 100%;
+     background: linear-gradient( #222222, #141414);
+ }
+ 
 
 
