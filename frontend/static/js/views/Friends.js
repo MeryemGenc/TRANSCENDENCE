@@ -14,7 +14,7 @@ export default class extends AbstractView {
         </div>
         <div class="col-md-5 card mx-2 mt-4">
             <div class="text-center mt-1">
-                <img src="image/erkek.png" class="rounded" alt="...">
+                <img src="static/images/erkek.png" class="rounded" alt="...">
             </div>
             <div class="card-body">
                 <h5 class="card-title">rcalik</h5>
@@ -52,7 +52,7 @@ export default class extends AbstractView {
 
         <div class="col-md-5 card mx-2 mt-4">
             <div class="text-center mt-1">
-                <img src="image/kiz.png" class="rounded" alt="...">
+                <img src="static/images/kiz.png" class="rounded" alt="...">
             </div>
             <div class="card-body">
                 <h5 class="card-title">rcalik</h5>

@@ -1,8 +1,9 @@
 
 import Dashboard from "./views/Dashboard.js";
 import Games from "./views/Games.js";
-import { turnuvaMode } from "./games/games.js";
+// import { turnuvaMode } from "./games/games.js";
 import Pong from "./views/Pong.js";
+import TurnuvaPong from "./views/TurnuvaPong.js";
 import Pong3d from "./views/Pong3d.js";
 import Tictactoe from "./views/Tictactoe.js";
 import Settings from "./views/Settings.js";
@@ -33,14 +34,14 @@ export const navigateTo = url => {
     history.pushState(null, null, url);
     router();
     // turnuva
-    // Sayfa içeriklerini yüklendikten sonra modalı açmak için küçük bir gecikme
-    setTimeout(() => {
-        // URL değişikliğinden sonra modal'ı kontrol et ve aç
-        if (url === '/pong' && turnuvaMode) {
-            const myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'));
-            myModal.show();
-        }
-    }, 200);  // 100ms bekleme süresi (gerekirse artırılabilir)
+    // // Sayfa içeriklerini yüklendikten sonra modalı açmak için küçük bir gecikme
+    // setTimeout(() => {
+    //     // URL değişikliğinden sonra modal'ı kontrol et ve aç
+    //     // if (url === '/pong' && turnuvaMode) {
+    //     //     const myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'));
+    //     //     myModal.show();
+    //     // }
+    // }, 200);  // 100ms bekleme süresi (gerekirse artırılabilir)
 };
 
 const router = async () => {
@@ -63,6 +64,7 @@ const router = async () => {
         { path: "/login", view: Login },
         { path: "/games", view: Games },
         { path: "/pong", view: Pong },
+        { path: "/turnuvapong", view: TurnuvaPong },
         { path: "/pong3d", view: Pong3d },
         { path: "/tictactoe", view: Tictactoe },
         { path: "/searchForFriends", view: SearchForFriends },
@@ -104,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // router(); // zaten navigateTo da router() kullanıyorum . 1.bunu neden buraya koydum ya da üstteki kod neden tekrar buraya geliyor? BAK !!!
+    router(); // refresh'ten sonra sayfa yüklemesi için gerekli.
 
 });
 
