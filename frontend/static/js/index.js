@@ -1,11 +1,13 @@
 
 import Dashboard from "./views/Dashboard.js";
 import Games from "./views/Games.js";
+import { turnuvaMode } from "./games/games.js";
 import Pong from "./views/Pong.js";
 import Pong3d from "./views/Pong3d.js";
 import Tictactoe from "./views/Tictactoe.js";
 import Settings from "./views/Settings.js";
 import Friends from "./views/Friends.js";
+import SearchForFriends from "./views/SearchForFriends.js";
 import Login from "./views/Login.js";
 import {stopGame} from "./games/pong/pong.js";
 import {stopGame_3d} from "./games/pong3d/pong3d.js";
@@ -30,6 +32,15 @@ export function ttt_getGameRunning() { return ttt_gameRunning; }
 export const navigateTo = url => {
     history.pushState(null, null, url);
     router();
+    // turnuva
+    // Sayfa içeriklerini yüklendikten sonra modalı açmak için küçük bir gecikme
+    setTimeout(() => {
+        // URL değişikliğinden sonra modal'ı kontrol et ve aç
+        if (url === '/pong' && turnuvaMode) {
+            const myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'));
+            myModal.show();
+        }
+    }, 200);  // 100ms bekleme süresi (gerekirse artırılabilir)
 };
 
 const router = async () => {
@@ -54,10 +65,12 @@ const router = async () => {
         { path: "/pong", view: Pong },
         { path: "/pong3d", view: Pong3d },
         { path: "/tictactoe", view: Tictactoe },
+        { path: "/searchForFriends", view: SearchForFriends },
         { path: "/settings", view: Settings },
         { path: "/friends", view: Friends }
     ];
 
+    
     // potential matches
     const potentialMatches = routes.map(route => {
         return {
@@ -77,7 +90,8 @@ const router = async () => {
 
     const view = new match.route.view();
     document.querySelector("#app").innerHTML = await view.getHtml();
-    // console.log(match.route.view());
+    // console.log("turnuvaMode: " + turnuvaMode);
+    // console.log("location.pathname: " + location.pathname);
 };
 
 window.addEventListener("popstate", router);
@@ -90,7 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    router(); // zaten navigateTo da router() kullanıyorum . 1.bunu neden buraya koydum ya da üstteki kod neden tekrar buraya geliyor? BAK !!!
+    // router(); // zaten navigateTo da router() kullanıyorum . 1.bunu neden buraya koydum ya da üstteki kod neden tekrar buraya geliyor? BAK !!!
+
 });
 
 
