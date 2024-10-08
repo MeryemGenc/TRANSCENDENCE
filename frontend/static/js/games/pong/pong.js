@@ -6,8 +6,8 @@ import { post_game_score }  from "../../api.js"
 
 //board
 let board;
-let boardWidth = 500;
-let boardHeight = 500;
+let boardWidth = 750;
+let boardHeight = 550;
 let context;
 
 //players
@@ -192,6 +192,7 @@ function update() {
 
     // score gösterimi
     context.font = "45px sans-serif";
+    // context.fillText("player1Score", boardWidth / 5, 45);
     context.fillText(player1Score, boardWidth / 5, 45);
     context.fillText(player2Score, boardWidth * 4 / 5 - 45, 45);
 
