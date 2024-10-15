@@ -11,7 +11,8 @@
             "user_friends": ["rcalik", "sguntepe", "caner"],
             "user_win_count": 4,
             "user_lose_count": 6,
-            "user_draw_count": 2
+            "user_draw_count": 2,
+            "language": "tr"
         }, 
         {
             "user_id": 124,
@@ -23,7 +24,8 @@
             "user_friends": ["mgencali", "sguntepe", "caner"],
             "user_win_count": 6,
             "user_lose_count": 7,
-            "user_draw_count": 8
+            "user_draw_count": 8,
+            "language": "en"
         }, 
         {
             "user_id": 125,
@@ -35,7 +37,8 @@
             "user_friends": ["rcalik", "mgencali", "caner"],
             "user_win_count": 4,
             "user_lose_count": 3,
-            "user_draw_count": 1
+            "user_draw_count": 1,
+            "language": "tr"
         }, 
         {
             "user_id": 126,
@@ -47,7 +50,8 @@
             "user_friends": ["rcalik", "sguntepe", "mgencali"],
             "user_win_count": 7,
             "user_lose_count": 5,
-            "user_draw_count": 6
+            "user_draw_count": 6,
+            "language": "en"
         } 
     ]
 }

@@ -4,7 +4,7 @@ import { translate } from "./../LanguageManager.js";
 export default class extends AbstractView {
     constructor() {
         super();
-        this.setTitle("Pong3D");
+        this.setTitle("Pong 3D Turnuva");
     }
 
     async getHtml() {
@@ -18,3 +18,6 @@ export default class extends AbstractView {
         `;
     }
 }
+
+
+ 

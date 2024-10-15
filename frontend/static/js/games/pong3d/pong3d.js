@@ -18,6 +18,34 @@ let animationId;
 let scoreElement1, scoreElement2;
 let scoreContainer;
 
+// OYUN SEÇENEKLERİ
+let playerMode;
+let theme;
+let difficulty;
+let bg_color = "#020305", plyr1_color = "#3a98c9", plyr2_color = "#00f700", ball_color = "#f72d93", line_color = "#FFFFFF";
+
+export function set_vars_pong3d(p_m, t, d)
+{
+    playerMode = p_m.options[p_m.selectedIndex].value;
+    theme = t.options[t.selectedIndex].value;
+    difficulty = d.options[d.selectedIndex].value;
+    switch (difficulty) {
+        case "1":
+            playerSpeed = 9; ballVelocityX = 2; ballVelocityY = 3; break;
+        case "2":
+            playerSpeed = 6; ballVelocityX = 4; ballVelocityY = 5; break;
+        case "3":
+            playerSpeed = 4; ballVelocityX = 7; ballVelocityY = 9; break;
+    }
+    if (theme == "2")
+    {
+        bg_color = "#FFFFFF", plyr1_color = "#3a98c9", plyr2_color = "#00f700", ball_color = "#f72d93", line_color = "#020305";
+    }
+    // console.log("pong3d - top: ", ballVelocityX + " " + ballVelocityY);
+    // console.log("pong3d - theme: ", theme);
+    // console.log("pong3d - difficulty: ", difficulty);
+}
+
 // DOM tamamen yüklendiğinde oyunu başlat
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
@@ -39,7 +67,7 @@ function setupScoreDisplay() {
     scoreContainer.style.display = 'flex';
     scoreContainer.style.gap = '50px';
     scoreContainer.style.fontSize = '24px';
-    scoreContainer.style.color = '#FFFFFF';
+    scoreContainer.style.color = line_color;
     scoreContainer.style.fontFamily = 'Arial, sans-serif';
     scoreContainer.style.zIndex = '1'; // Üstte kalmasını sağlar
 
@@ -76,7 +104,7 @@ function initialGame_3d() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(boardWidth, boardHeight);
     const board_3d = document.getElementById("board_3d");
-    renderer.setClearColor(0x020305); // Arka plan rengini ayarla
+    renderer.setClearColor(bg_color); // Arka plan rengini ayarla
     board_3d.appendChild(renderer.domElement);
     scene = new THREE.Scene();
 
@@ -90,8 +118,8 @@ function initialGame_3d() {
 
     // Nesneleri oluştur
     let playerGeometry = new THREE.BoxGeometry(playerWidth, playerHeight, 20);
-    let playerMaterial1 = new THREE.MeshStandardMaterial({ color: 0x3a98c9 });
-    let playerMaterial2 = new THREE.MeshStandardMaterial({ color: 0x00f700 });
+    let playerMaterial1 = new THREE.MeshStandardMaterial({ color: plyr1_color });
+    let playerMaterial2 = new THREE.MeshStandardMaterial({ color: plyr2_color });
 
     // OYUNCU1
     player1 = new THREE.Mesh(playerGeometry, playerMaterial1);
@@ -105,7 +133,7 @@ function initialGame_3d() {
 
     // TOP
     let sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
-    let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xf72d93 });
+    let sphereMaterial = new THREE.MeshStandardMaterial({ color: ball_color });
     ball = new THREE.Mesh(sphereGeometry, sphereMaterial);
     resetBall();
     scene.add(ball);
@@ -138,7 +166,7 @@ function initialGame_3d() {
 
 // Oyun alanının üst ve alt sınır çizgilerini ekler
 function addBoundaryLines() {
-    const boundaryMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
+    const boundaryMaterial = new THREE.LineBasicMaterial({ color: line_color });
     const boundaryGeometryTop = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(-boardWidth / 2, boardHeight / 2, 0),
         new THREE.Vector3(boardWidth / 2, boardHeight / 2, 0)
@@ -158,8 +186,8 @@ function addBoundaryLines() {
 function resetBall() {
     ball.position.set(0, 0, 0);
     // Başlangıç yönünü rastgele belirle
-    ballVelocityX = Math.random() > 0.5 ? 3 : -3;
-    ballVelocityY = (Math.random() * 4) - 2; // Y yönlü hız -2 ile 2 arasında rastgele
+    ballVelocityX = ballVelocityX * -1;
+    ballVelocityY = ballVelocityY; // Y yönlü hız -2 ile 2 arasında rastgele
 }
 
 function startGame_3d() {
@@ -272,16 +300,6 @@ function updateGameLogic() {
         return;
     }
 }
-
-// Topun hızını artırır (isteğe bağlı)
-// function increaseBallSpeed() {
-//     // Hızı çok hızlı olmasını engellemek için sınır koy
-//     const maxSpeed = 10;
-//     ballVelocityX = ballVelocityX > 0 ? Math.min(ballVelocityX + 0.5, maxSpeed) : Math.max(ballVelocityX - 0.5, -maxSpeed);
-//     ballVelocityY = ballVelocityY > 0 ? Math.min(ballVelocityY + 0.5, maxSpeed) : Math.max(ballVelocityY - 0.5, -maxSpeed);
-// }
-
-// Puanları günceller
 
 function updateScore() {
     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
