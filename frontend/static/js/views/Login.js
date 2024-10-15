@@ -1,4 +1,5 @@
 import AbstractView from "./AbstractView.js"; 
+import { translate } from "./../LanguageManager.js";
 
 export default class extends AbstractView {
     constructor() {
@@ -9,7 +10,7 @@ export default class extends AbstractView {
     async getHtml() {
         return `
             <div class="position-absolute top-50 start-50">
-                <button type="button" class="btn btn-outline-success">Login with 42</button>
+                <button data-translate="LOGIN" type="button" class="btn btn-outline-success">${translate("LOGIN")}</button>
             </div>
         `;
     }

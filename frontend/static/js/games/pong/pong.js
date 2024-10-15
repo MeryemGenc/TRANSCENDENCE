@@ -14,8 +14,8 @@ let context;
 let playerWidth = 10;
 let playerHeight = 50;
 let playerSpeed = 3; // oyuncuların hızını belirle
-let player1VelocityY = 0;
-let player2VelocityY = 0;
+let player1VelocityY = 0; // !!! kullanımdan kaldırılmış olabilir.
+let player2VelocityY = 0; // !!! kullanımdan kaldırılmış olabilir.
 
 //player 1 konum ve boyut ayarları
 let player1 = {
@@ -47,16 +47,44 @@ let ball = {
     y: boardHeight / 2,
     width: ballWidth,
     height: ballHeight,
-    velocityX: 2,
-    velocityY: 3
+    velocityX: 4,
+    velocityY: 6
 }
 
 let keys = {}; 
+
+// OYUN SEÇENEKLERİ
+let playerMode; // player mode single player ise ai !!!
+let theme;
+let difficulty;
+let bg_color = "black", plyr_color = "white";
+
+export function set_vars_pong(p_m, t, d)
+{
+    playerMode = p_m.options[p_m.selectedIndex].value;
+    theme = t.options[t.selectedIndex].value;
+    difficulty = d.options[d.selectedIndex].value;
+    switch (difficulty) {
+        case "1":
+            playerSpeed = 6; ball.velocityX = 2; ball.velocityY = 3; break;
+        case "2":
+            playerSpeed = 4; ball.velocityX = 3; ball.velocityY = 4; break;
+        case "3":
+            playerSpeed = 3; ball.velocityX = 4; ball.velocityY = 5; break;
+    }
+}
+
+
+
+
+
 function keyDownHandler(e) { // tuşlara basıldığında ilgili tuşun durumunu true yap
-    keys[e.code] = true; }
+    keys[e.code] = true; 
+}
 
 function keyUpHandler(e) { // tuşlar bırakıldığında ilgili tuşun durumunu false yap
-    keys[e.code] = false; }
+    keys[e.code] = false; 
+}
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -75,6 +103,9 @@ function startGame() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
+    if (theme == "2")
+    { plyr_color = "#212121"; bg_color = "#e0c5de"; }
+    board.style.backgroundColor = bg_color;
     context = board.getContext("2d");
     
     setGameRunning(true); // Oyun durumu aktif
@@ -87,13 +118,10 @@ function startGame() {
 export function stopGame() {
     if (getGameRunning()) {
         setGameRunning(false); // Oyun durduruldu
-        context.clearRect(0, 0, board.width, board.height); // Canvas temizle
-        // alert("Oyun sona erdi! URL değişti.");
-        // oyun durduğunda diğer fonksiyonları da temizle. ???
+        context.clearRect(0, 0, board.width, board.height); 
 
         post_game_score(player1Score, player2Score);
 
-        // player-ball -> konum-score  sıfırlama
         player1.x = 10;
         player1.y = boardHeight / 2;
         player1.velocityY = player1VelocityY;
@@ -133,7 +161,7 @@ function update() {
             player1.y = nextPlayer1Y;
         }
     }
-    context.fillStyle = "white";
+    context.fillStyle = plyr_color;
     context.fillRect(player1.x, player1.y, player1.width, player1.height);
 
     // player2 hareketi
@@ -148,7 +176,7 @@ function update() {
             player2.y = nextPlayer2Y;
         }
     }
-    context.fillStyle = "white";
+    context.fillStyle = plyr_color;
     context.fillRect(player2.x, player2.y, player2.width, player2.height);
 
     // score kontrol
@@ -160,7 +188,7 @@ function update() {
     // top hareketi ve diğer işlemler...
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
-    context.fillStyle = "white";
+    context.fillStyle = plyr_color;
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     // topun canvasa çarpması
@@ -181,13 +209,13 @@ function update() {
         }
     }
 
-    // game over kontrolü
+    // game over kontrolü - top kaybedenin tarafından başlatılır.
     if (ball.x < 0) {
         player2Score++;
-        resetGame(1);
+        resetGame(1 * ball.velocityX, ball.velocityY);
     } else if (ball.x + ballWidth > boardWidth) {
         player1Score++;
-        resetGame(-1);
+        resetGame(-1 * ball.velocityX, ball.velocityY);
     }
 
     // score gösterimi
@@ -216,14 +244,14 @@ function detectCollision(a, b) {
            a.y + a.height >= b.y; // top y ekseninde player hizası içerisinde olması
 }
 
-function resetGame(direction) {
+function resetGame(directionX, directionY) {
     ball = {
         x: boardWidth / 2,
         y: boardHeight / 2,
         width: ballWidth,
         height: ballHeight,
-        velocityX: direction,
-        velocityY: 3
+        velocityX: directionX,
+        velocityY: directionY 
     }
     player1.velocityY = 0;
     player2.velocityY = 0;

@@ -21,4 +21,11 @@ export default class extends AbstractView {
         </div>
         `;
     }
+
+    // Dil değişimini uygula
+    async afterRender() {
+        LanguageManager.updateTexts();
+    }
+
+
 }

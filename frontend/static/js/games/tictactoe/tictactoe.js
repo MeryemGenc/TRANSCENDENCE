@@ -19,6 +19,18 @@ let cells;
 let tictactoeStatusText;
 let tictactoeRestartBtn;
 
+// OYUN SEÇENEKLERİ
+let playerMode;
+let theme;
+
+export function set_vars_ttt(p_m, t)
+{
+    playerMode = p_m.options[p_m.selectedIndex].text;
+    theme = t.options[t.selectedIndex].text;
+    console.log("ttt - playerMode: ", playerMode);
+    console.log("ttt - theme: ", theme);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
         if (e.target.matches("#tictactoeStartBtn")) { 

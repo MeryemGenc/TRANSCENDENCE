@@ -1,4 +1,5 @@
 import AbstractView from "./AbstractView.js";
+import { translate } from "./../LanguageManager.js";
 
 export default class extends AbstractView {
     constructor() {
@@ -10,11 +11,10 @@ export default class extends AbstractView {
         return `
             <div class="container_pong">
                 <canvas id="board"></canvas>
-                <button id="pong_play_button2" type="button">PLAY</button>        
+                <button data-translate="PLAY" id="pong_play_button2" type="button">${translate("PLAY")}</button>        
             </div>
 
             
-            <script type="module" src="/static/js/games/pong/pong.js"></script> 
         `;
     }
 }
