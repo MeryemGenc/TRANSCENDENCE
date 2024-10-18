@@ -27,6 +27,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# ft_transcendence/settings.py
+
+
+# settings.py
+
+# 42 API için gerekli ayarlar
+# settings.py
+CLIENT_ID = 'u-s4t2ud-f5032af5e09c2c681ec6a74d9034cd78117fcbe758a5159474ddb6678ead12e8'
+CLIENT_SECRET = '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'
+REDIRECT_URI = 'http://localhost:8000/authapp/callback/'  # Redirect URI
+
+
 
 # Application definition
 
@@ -38,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'authapp',
 ]
 
 MIDDLEWARE = [
