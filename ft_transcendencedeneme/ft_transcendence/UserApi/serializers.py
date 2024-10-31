@@ -4,4 +4,4 @@ from .models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = '__all__'  # Tüm alanları kullanabilirsiniz ya da belirli alanları listeleyebilirsiniz
+        fields = '__all__'  # Tüm alanları kullan

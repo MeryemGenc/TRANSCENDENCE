@@ -34,10 +34,18 @@ ALLOWED_HOSTS = []
 
 # 42 API için gerekli ayarlar
 # settings.py
-CLIENT_ID = 'u-s4t2ud-cee2d9d4516e5e94cd9c508dfcc91e985eff9b95ce45a9e35fb9b3731bda850c'
-CLIENT_SECRET = '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'
-REDIRECT_URI = 'http://127.0.0.1:8000/auth/redirect/'  # Redirect URI
+# settings.py
 
+# 42 API kimlik bilgileri
+CLIENT_ID = 'u-s4t2ud-0a22e09e6c53ae440cbd9773d652675ccab942984d6338f8c98f6dd4e6e07540'
+CLIENT_SECRET = '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'
+REDIRECT_URI = 'http://127.0.0.1:8000/authapp/auth/redirect'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 
 # Application definition
@@ -52,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authapp',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
