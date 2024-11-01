@@ -105,5 +105,9 @@ a {
      background: linear-gradient( #222222, #141414);
  }
  
-
+ .profile-small-img {
+    width: 30px; /* Resmin boyutunu daha küçük yapmak için bu değeri ayarlayın */
+    height: 30px; /* Yükseklik değerini genişlik ile aynı tutarak oranı koruyun */
+    object-fit: cover; /* Resmin belirttiğiniz boyutları doldurmasını sağlar, bozulmadan */
+}
 
