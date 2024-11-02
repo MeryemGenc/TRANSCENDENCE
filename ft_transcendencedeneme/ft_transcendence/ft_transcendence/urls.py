@@ -10,5 +10,5 @@ urlpatterns = [
     path('games', index, name='games'),
     path('settings', index, name='settings'),
     path('authapp/', include('authapp.urls')),
-    # Diğer yönlendirmeleri buraya ekleyebilirsin
+    path('api/', include('UserApi.urls')),
 ]

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^j4+obt#jzm@qhph*2@dlj^oc$%3-3qbn92uscyhp&&ey1r!!+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # ft_transcendence/settings.py
 
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authapp',
     'rest_framework_simplejwt',
+    'UserApi',
 ]
 
 MIDDLEWARE = [

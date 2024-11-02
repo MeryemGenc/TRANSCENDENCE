@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import UserProfile
+from authapp.models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = '__all__'  # Tüm alanları kullan
+        fields = '__all__'  # veya istediğin alanları listeleyebilirsin

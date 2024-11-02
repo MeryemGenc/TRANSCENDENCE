@@ -1,7 +1,7 @@
-from rest_framework import viewsets
-from .models import UserProfile
-from .serializers import UserProfileSerializer
+from rest_framework import generics
+from authapp.models import UserProfile
+from UserApi.serializers import UserProfileSerializer
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class UserProfileList(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
