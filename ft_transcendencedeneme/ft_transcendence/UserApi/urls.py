@@ -1,6 +1,6 @@
 from django.urls import path
-from UserApi.views import UserProfileList
+from .views import ProtectedView
 
 urlpatterns = [
-    path('users/', UserProfileList.as_view(), name='userprofile-list'),
+    path('protected/', ProtectedView.as_view(), name='protected'),
 ]

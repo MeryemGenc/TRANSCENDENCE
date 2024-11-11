@@ -13,6 +13,7 @@ import { stopGame_3d } from "./games/pong3d/pong3d.js";
 import { ttt_stopGame } from "./games/tictactoe/tictactoe.js";
 
 import { loadLanguage, initializeLanguage, translate, applyTranslations } from "./LanguageManager.js";
+import { fetchProtectedData } from "./api.js";
 
 // PONG - oyun durumu yönetimi
 let gameRunning = false;
@@ -33,6 +34,7 @@ export const navigateTo = url => {
     history.pushState(null, null, url);
     router();
 };
+
 
 const router = async () => {
     if (ttt_gameRunning) ttt_stopGame();
@@ -101,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     router();
+    // fetchProtectedData();
 });
 
 
