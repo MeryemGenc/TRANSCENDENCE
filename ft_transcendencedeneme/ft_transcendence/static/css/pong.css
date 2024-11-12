@@ -1,20 +1,5 @@
-.container_pong {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;   
-}
-
-#board {
-    background-color: black;
-    width: 750px;
-    height: 550px;
-    display: block;
-}
-
-#pong_play_button2 {
-    position: absolute;
+#pong_game_button {
+	position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -27,6 +12,11 @@
     cursor: pointer;
 }
 
-#pong_play_button2:hover {
+#pong_game_button:hover {
     background-color: #008CBA; 
+}
+
+#pong_timer {
+    background-color: black;
+    color: green;
 }

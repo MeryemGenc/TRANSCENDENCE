@@ -12,15 +12,14 @@ class CustomJWTAuthentication(JWTAuthentication):
             raise AuthenticationFailed("Token contains no user_id claim")
         try:
             user = UserProfile.objects.get(id=user_id)
-            # Manuel olarak 'is_authenticated' özelliğini ekliyoruz
-            user.is_authenticated = True  # Kullanıcıyı aktif olarak işaretle
+            user.is_authenticated = True
             return user
         except UserProfile.DoesNotExist:
             raise AuthenticationFailed("User not found")
 
 class ProtectedView(APIView):
-    authentication_classes = [CustomJWTAuthentication]  # JWT ile kimlik doğrulama
-    permission_classes = [IsAuthenticated]  # Kullanıcı giriş yapmış olmalı
+    authentication_classes = [CustomJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
@@ -28,6 +27,8 @@ class ProtectedView(APIView):
             'message': 'Erişim başarılı',
             'user_id': user.id,
             'username': user.login,
-            'email': user.email
-            
+            'email': user.email,
+            'nickname': user.nickname,
+            'avatar_path': user.avatar_path,
+            'language_settings': user.language_settings  # ISO dil kodu (örneğin, 'tr' veya 'en')
         })

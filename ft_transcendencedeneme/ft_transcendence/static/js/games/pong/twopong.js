@@ -1,92 +1,86 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { getGameRunning_3d, setGameRunning_3d}  from "../../index.js"
-import { post_game_score }  from "../../api.js"
+import { getGameRunning, setGameRunning}  from "../../index.js"
+import { navigateTo } from "../../index.js";
+
+
+let player1score = 0;
+let player2score = 0;
 
 let scene, camera, renderer;
 let player1, player2, ball;
-let player1Score = 0, player2Score = 0;
-let player1Name = "Mgencali";
-let player2Name = "Rcalik";
+// export let player1Score = 0, player2Score = 0;
 let keys = {};
-let boardWidth = 700, boardHeight = 500;
+let boardWidth = 800, boardHeight = 600;
 let playerWidth = 8, playerHeight = 100;
 let playerSpeed = 5;
 let ballVelocityX = 3, ballVelocityY = 2;
 let orbit;
 let animationId;
-let scoreElement1, scoreElement2;
-let scoreContainer;
+// let scoreElement1, scoreElement2;
+// let scoreContainer;
 
-// OYUN SEÇENEKLERİ
-let playerMode;
-let theme;
-let difficulty;
-let bg_color = "#020305", plyr1_color = "#3a98c9", plyr2_color = "#00f700", ball_color = "#f72d93", line_color = "#FFFFFF";
 
-export function set_vars_pong3d(p_m, t, d)
-{
-    playerMode = p_m.options[p_m.selectedIndex].value;
-    theme = t.options[t.selectedIndex].value;
-    difficulty = d.options[d.selectedIndex].value;
-    switch (difficulty) {
-        case "1":
-            playerSpeed = 9; ballVelocityX = 2; ballVelocityY = 3; break;
-        case "2":
-            playerSpeed = 6; ballVelocityX = 4; ballVelocityY = 5; break;
-        case "3":
-            playerSpeed = 4; ballVelocityX = 7; ballVelocityY = 9; break;
-    }
-    if (theme == "2")
-    {
-        bg_color = "#FFFFFF", plyr1_color = "#3a98c9", plyr2_color = "#00f700", ball_color = "#f72d93", line_color = "#020305";
-    }
-    // console.log("pong3d - top: ", ballVelocityX + " " + ballVelocityY);
-    // console.log("pong3d - theme: ", theme);
-    // console.log("pong3d - difficulty: ", difficulty);
-}
 
 // DOM tamamen yüklendiğinde oyunu başlat
+// document.addEventListener("DOMContentLoaded", () => {
+//     document.body.addEventListener("click", e => {
+//         if (e.target.matches("#pong_game_button")) {
+//             e.target.style.display = 'none'; 
+			
+//             startGame();
+//         }
+//     });
+// });
+
+
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener("click", e => {
-        if (e.target.matches("#pong_3d_play_button2")) {
-            e.target.style.display = 'none'; 
-            startGame_3d();
-            setupScoreDisplay();
-        }
-    });
+    // Sadece '/pong3d' sayfasında popstate dinleyicisini ekle
+    if (window.location.pathname === '/pong3d') {
+		window.addEventListener("popstate", (event) => {
+			
+        });
+    }
 });
 
-// Puan gösterimi için HTML elemanlarını oluştur
-function setupScoreDisplay() {
-    // const scoreContainer = document.createElement('div');
-    scoreContainer.style.position = 'absolute';
-    scoreContainer.style.top = '2%';
-    scoreContainer.style.left = '50%';
-    scoreContainer.style.transform = 'translateX(-50%)';
-    scoreContainer.style.display = 'flex';
-    scoreContainer.style.gap = '50px';
-    scoreContainer.style.fontSize = '24px';
-    scoreContainer.style.color = line_color;
-    scoreContainer.style.fontFamily = 'Arial, sans-serif';
-    scoreContainer.style.zIndex = '1'; // Üstte kalmasını sağlar
-
-    scoreElement1 = document.createElement('div');
-    scoreElement1.id = 'score1';
-    scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
-
-    scoreElement2 = document.createElement('div');
-    scoreElement2.id = 'score2';
-    scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
-
-    scoreContainer.appendChild(scoreElement1);
-    scoreContainer.appendChild(scoreElement2);
-
-    // Skoru board_3d div'ine ekliyoruz
-    const board_3d = document.getElementById("board_3d");
-    board_3d.style.position = 'relative';  // Skor göstergesinin konumlandırılmasını sağlar
-    board_3d.appendChild(scoreContainer);
+export function popstate_two_players_game_events()
+{
+	stopGame();
+	alert('Exiting the game.');
+    navigateTo('/games');
 }
+
+
+// Puan gösterimi için HTML elemanlarını oluştur
+// function setupScoreDisplay() {
+//     // const scoreContainer = document.createElement('div');
+//     scoreContainer.style.position = 'absolute';
+//     scoreContainer.style.top = '2%';
+//     scoreContainer.style.left = '50%';
+//     scoreContainer.style.transform = 'translateX(-50%)';
+//     scoreContainer.style.display = 'flex';
+//     scoreContainer.style.gap = '50px';
+//     scoreContainer.style.fontSize = '24px';
+//     scoreContainer.style.color = '#FFFFFF';
+//     scoreContainer.style.fontFamily = 'Arial, sans-serif';
+//     scoreContainer.style.zIndex = '1'; // Üstte kalmasını sağlar
+
+//     scoreElement1 = document.createElement('div');
+//     scoreElement1.id = 'score1';
+//     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
+
+//     scoreElement2 = document.createElement('div');
+//     scoreElement2.id = 'score2';
+//     scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
+
+//     scoreContainer.appendChild(scoreElement1);
+//     scoreContainer.appendChild(scoreElement2);
+
+//     // Skoru board_3d div'ine ekliyoruz
+//     const board_3d = document.getElementById("board_3d");
+//     board_3d.style.position = 'relative';  // Skor göstergesinin konumlandırılmasını sağlar
+//     board_3d.appendChild(scoreContainer);
+// }
 
 function keyDown(event) {
     keys[event.key.toLowerCase()] = true;
@@ -98,13 +92,13 @@ function keyUp(event) {
 }
 
 function initialGame_3d() {
-    scoreContainer = document.createElement('div');
+    // scoreContainer = document.createElement('div');
     // console.log("\nplayer1score: " + player1Score + "\nplayer2score: " + player2Score)
     // Renderer, sahne ve kamera ayarları
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(boardWidth, boardHeight);
-    const board_3d = document.getElementById("board_3d");
-    renderer.setClearColor(bg_color); // Arka plan rengini ayarla
+    const board_3d = document.getElementById("pong_board");
+    renderer.setClearColor(0x020305); // Arka plan rengini ayarla
     board_3d.appendChild(renderer.domElement);
     scene = new THREE.Scene();
 
@@ -118,8 +112,8 @@ function initialGame_3d() {
 
     // Nesneleri oluştur
     let playerGeometry = new THREE.BoxGeometry(playerWidth, playerHeight, 20);
-    let playerMaterial1 = new THREE.MeshStandardMaterial({ color: plyr1_color });
-    let playerMaterial2 = new THREE.MeshStandardMaterial({ color: plyr2_color });
+    let playerMaterial1 = new THREE.MeshStandardMaterial({ color: 0x3a98c9 });
+    let playerMaterial2 = new THREE.MeshStandardMaterial({ color: 0x00f700 });
 
     // OYUNCU1
     player1 = new THREE.Mesh(playerGeometry, playerMaterial1);
@@ -133,7 +127,7 @@ function initialGame_3d() {
 
     // TOP
     let sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
-    let sphereMaterial = new THREE.MeshStandardMaterial({ color: ball_color });
+    let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xf72d93 });
     ball = new THREE.Mesh(sphereGeometry, sphereMaterial);
     resetBall();
     scene.add(ball);
@@ -166,7 +160,7 @@ function initialGame_3d() {
 
 // Oyun alanının üst ve alt sınır çizgilerini ekler
 function addBoundaryLines() {
-    const boundaryMaterial = new THREE.LineBasicMaterial({ color: line_color });
+    const boundaryMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
     const boundaryGeometryTop = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(-boardWidth / 2, boardHeight / 2, 0),
         new THREE.Vector3(boardWidth / 2, boardHeight / 2, 0)
@@ -186,12 +180,20 @@ function addBoundaryLines() {
 function resetBall() {
     ball.position.set(0, 0, 0);
     // Başlangıç yönünü rastgele belirle
-    ballVelocityX = ballVelocityX * -1;
-    ballVelocityY = ballVelocityY; // Y yönlü hız -2 ile 2 arasında rastgele
+    ballVelocityX = Math.random() > 0.5 ? 3 : -3;
+    ballVelocityY = (Math.random() * 4) - 2; // Y yönlü hız -2 ile 2 arasında rastgele
 }
 
-function startGame_3d() {
-    setGameRunning_3d(true);
+export function startGame() {
+
+	if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+	playerSpeed = 5;
+    ballVelocityX = 3;
+    ballVelocityY = 2;
+    setGameRunning(true);
     initialGame_3d();
     animate();
 }
@@ -202,9 +204,10 @@ function animate() {
     animationId = requestAnimationFrame(animate);
     orbit.update();
     
+	
     updateGameLogic();
     
-    if (!getGameRunning_3d() || !renderer || !scene || !camera) {
+    if (!getGameRunning() || !renderer || !scene || !camera) {
         console.log("Renderer, scene or camera is not defined.");
         return;
     }
@@ -215,7 +218,7 @@ function animate() {
 
 // Oyun mantığını günceller
 function updateGameLogic() {
-    // if (!getGameRunning_3d())
+    // if (!getGameRunning())
     //     return ;
     // console.log("update");
     // Oyuncu1 hareketi
@@ -283,52 +286,95 @@ function updateGameLogic() {
     // Puanlama
     if (ball.position.x - ball.geometry.parameters.radius > boardWidth / 2) {
         // Oyuncu1 puan kazandı
-        player1Score += 1;
-        updateScore();
+        player1score++;
+
+
+		player1_up_point();
+		
         resetBall();
     }
     if (ball.position.x + ball.geometry.parameters.radius < -boardWidth / 2) {
         // Oyuncu2 puan kazandı
-        player2Score += 1;
-        updateScore();
+        player2score++;
+
+		player2_up_point();	
+
         resetBall();
     }   
     
     // score kontrol
-    if (player1Score >= 3 || player2Score >= 3) {
-        stopGame_3d();
-        return;
-    }
+    if (player1score >= 1 || player2score >= 1) {
+		if (player1score == 1){
+			alert("Player 1 Win!");
+		}
+		else if(player2score == 1) {
+			alert("Player 2 Win!");
+		}
+		stopGame();
+	return;
+	}
 }
 
-function updateScore() {
-    scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
-    scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
+function player2_up_point()
+{
+	const plyr2scr = document.getElementById('pong_score_player2');
+	plyr2scr.style.color = "green"	
+	setTimeout(() => {
+		plyr2scr.style.color = 'white';
+	}, 500);
+	plyr2scr.textContent = player2score
 }
 
-export function stopGame_3d() {
+function player1_up_point()
+{
+	const plyr2scr = document.getElementById('pong_score_player1');
+	plyr2scr.style.color = "green";
+	setTimeout(() => {
+		plyr2scr.style.color = 'white';
+	}, 500);
+	plyr2scr.textContent = player1score
+}
+
+// Topun hızını artırır (isteğe bağlı)
+// function increaseBallSpeed() {
+//     // Hızı çok hızlı olmasını engellemek için sınır koy
+//     const maxSpeed = 10;
+//     ballVelocityX = ballVelocityX > 0 ? Math.min(ballVelocityX + 0.5, maxSpeed) : Math.max(ballVelocityX - 0.5, -maxSpeed);
+//     ballVelocityY = ballVelocityY > 0 ? Math.min(ballVelocityY + 0.5, maxSpeed) : Math.max(ballVelocityY - 0.5, -maxSpeed);
+// }
+
+// Puanları günceller
+
+// function updateScore() {
+//     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
+//     scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
+// }
+
+export function stopGame() {
     // Oyun devam ediyorsa durdur
-    if (getGameRunning_3d()) 
+    if (getGameRunning()) 
     { 
-        // console.log("setGameRunning_3d false");
-        setGameRunning_3d(false); 
+        // console.log("setGameRunning false");
+        setGameRunning(false); 
         cancelAnimationFrame(animationId);
         animationId = null;
     }
 
-    document.getElementById("pong_3d_play_button2").style.display = 'block';
+
+    document.getElementById("pong_game_button").style.display = '';
     
     keys = {};
-    post_game_score(player1Score, player2Score); 
+    
     cleanUpScene(); 
-    if (scoreContainer) {
-        scoreContainer.remove();
-        scoreContainer = null;
-    }
+    // if (scoreContainer) {
+    //     scoreContainer.remove();
+    //     scoreContainer = null;
+    // }
     // console.log("Oyun durduruldu.");
-    player1Score = 0;
-    player2Score = 0; 
-    updateScore();
+    player1score = 0;
+    player2score = 0;
+	console.log('game is finish');
+    // updateScore();
 }
 
 // Sahneyi temizler
@@ -347,7 +393,7 @@ function cleanUpScene() {
     // Render'ı durdur ve DOM'dan kaldır
     if (renderer) {
         renderer.dispose();
-        const board_3d = document.getElementById("board_3d");
+        const board_3d = document.getElementById("pong_board");
         if (board_3d && renderer.domElement.parentNode === board_3d) {
             board_3d.removeChild(renderer.domElement);
         }
@@ -358,5 +404,3 @@ function cleanUpScene() {
     scene = null;
     camera = null;
 }
-
-

@@ -1,68 +1,58 @@
-// Çerezden access_token'i alma işlevi
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
 
-// Korunan endpoint'e fetch isteği
-export async function fetchProtectedData() {
-    const token = getCookie('access_token'); // Çerezden access_token'i alıyoruz
+import { initializeLanguage } from './LanguageManager.js';
+import { login_init } from './login/login.js';
+
+export let g_data = null;
+
+export async function fetchProtectedData() { // nerde çağırılacak ???
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('access_token='))
+        ?.split('=')[1];
 
     if (!token) {
-        console.log('Token bulunamadı. Lütfen giriş yapın.');
+        console.log('Kullanıcı oturum açmamış');
         return;
     }
 
     try {
-        const response = await fetch('http://localhost:8000/api/protected/', {
+        const response = await fetch('/api/protected/', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, // Token'ı Bearer olarak başlıkta gönderiyoruz
+                'Authorization': `Bearer ${token}`, // Token'i ekliyoruz
                 'Content-Type': 'application/json',
-            }
+            },
         });
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Korumalı veriler:', data);
+            console.log('Kullanıcı verisi:', data);
+            console.log('nick', data.username);
+            console.log('lang', data.language_settings);
+            // LANGUAGE
+            localStorage.setItem('language', data.language_settings);
+            initializeLanguage();
+            g_data = data;
+            
+            login_init();
         } else {
-            const errorData = await response.json();
-            console.log('Hata:', errorData);
+            console.log('Erişim başarısız:', response.status);
         }
     } catch (error) {
-        console.error('Veri çekme hatası:', error);
+        console.error('Fetch hatası:', error);
     }
 }
 
-// Kullanıcı giriş yaptıktan sonra korunan veriyi çekmek için işlevi çağırın
+// Fonksiyonu çağırarak veriyi alabiliriz
 fetchProtectedData();
 
 
-  
 export function post_game_score(player1, player2) {
-    alert("player1: " + player1 + "\n" + "player2: " + player2);
-    console.log("player1: " + player1 + "\n");
-    console.log("player2: " + player2 + "\n");
-
-    // Skorları backend'e POST isteği ile gönderiyoruz
-    fetch('http://127.0.0.1:8000/game-score/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            player1: player1,
-            player2: player2,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Skor başarıyla gönderildi:', data);
-        console.log('Player 1:', data.player1);
-        console.log('Player 2:', data.player2);
-    })
-    .catch(error => {
-        console.error('Skor gönderme hatası:', error);
-    });
+    setTimeout(() => {
+        alert("player1: " + player1 + "\n" + "player2: " + player2);
+        console.log("player1: " + player1 + "\n");
+        console.log("player2: " + player2 + "\n");
+    }, 500);
 }
+
+

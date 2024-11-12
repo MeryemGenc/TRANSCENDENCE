@@ -1,5 +1,8 @@
+
+import { g_data } from "./api.js";
 let currentLanguage = 'tr'; // Varsayılan dil !!! bu da db'den alınacak.
 let translations = {};
+
 
 // Dil dosyasını yükleme
 export async function loadLanguage(lang) {
@@ -12,11 +15,24 @@ export async function loadLanguage(lang) {
         currentLanguage = lang;
         localStorage.setItem('language', lang);
         applyTranslations();
-        // !!! burada değiştirilen dil seçimi db atılır. 
+
+        // Burada dil seçimi db'ye gönderilebilir.
     } catch (error) {
         console.error(error);
     }
 }
+
+// Başlangıçta kaydedilmiş dili yükleme
+export function initializeLanguage() {
+    const savedLanguage = localStorage.getItem('language') || g_data.language_settings || currentLanguage;
+    if (savedLanguage) {
+        loadLanguage(savedLanguage);
+    } else {
+        loadLanguage(currentLanguage);
+    }
+}
+
+
 
 // Çeviri fonksiyonu
 export function translate(key) {
@@ -31,12 +47,12 @@ export function applyTranslations() {
     });
 }
 
-// Başlangıçta kaydedilmiş dili yükleme
-export function initializeLanguage() {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-        loadLanguage(savedLanguage);
-    } else {
-        loadLanguage(currentLanguage);
-    }
-}
+// // Başlangıçta kaydedilmiş dili yükleme
+// export function initializeLanguage() {
+//     const savedLanguage = localStorage.getItem('language');
+//     if (savedLanguage) {
+//         loadLanguage(savedLanguage);
+//     } else {
+//         loadLanguage(currentLanguage);
+//     }
+// }
