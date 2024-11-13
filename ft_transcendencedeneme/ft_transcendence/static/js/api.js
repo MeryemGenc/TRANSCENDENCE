@@ -33,6 +33,13 @@ export async function fetchProtectedData() { // nerde çağırılacak ???
             localStorage.setItem('language', data.language_settings);
             initializeLanguage();
             g_data = data;
+            const updateData = {
+                nickname: "YeniNick",
+                avatar_path: "/static/images/yeni_avatar.png",
+                language_settings: "en"
+            };
+            
+            fetchUpdateUserProfile(updateData);
             
             login_init();
         } else {
@@ -45,6 +52,41 @@ export async function fetchProtectedData() { // nerde çağırılacak ???
 
 // Fonksiyonu çağırarak veriyi alabiliriz
 fetchProtectedData();
+
+export async function fetchUpdateUserProfile(data) {
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('access_token='))
+        ?.split('=')[1];
+
+    if (!token) {
+        console.log('Kullanıcı oturum açmamış');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/user/update-profile/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Token'i ekliyoruz
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data) // Gönderilecek veriyi JSON formatında ekliyoruz
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Güncellenmiş Kullanıcı Bilgileri:', responseData);
+            // Güncellenen verileri g_data içine eklemek için
+            g_data = { ...g_data, ...responseData };
+        } else {
+            console.log('Güncelleme başarısız:', response.status);
+        }
+    } catch (error) {
+        console.error('Fetch hatası:', error);
+    }
+}
+
 
 
 export function post_game_score(player1, player2) {

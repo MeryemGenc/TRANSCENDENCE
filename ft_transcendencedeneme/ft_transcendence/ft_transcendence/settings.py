@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',  # JWT desteği
     'UserApi',
     'corsheaders',
+    'UserChangedApi',
 
 ]
 

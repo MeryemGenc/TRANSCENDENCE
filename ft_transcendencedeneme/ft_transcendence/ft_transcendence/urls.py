@@ -11,4 +11,5 @@ urlpatterns = [
     path('settings', index, name='settings'),
     path('authapp/', include('authapp.urls')),
     path('api/', include('UserApi.urls')),
+    path('api/user/', include('UserChangedApi.urls')),
 ]
