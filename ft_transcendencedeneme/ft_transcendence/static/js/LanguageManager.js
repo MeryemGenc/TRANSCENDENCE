@@ -24,7 +24,7 @@ export async function loadLanguage(lang) {
 
 // Başlangıçta kaydedilmiş dili yükleme
 export function initializeLanguage() {
-    const savedLanguage = localStorage.getItem('language') || g_data.language_settings || currentLanguage;
+    const savedLanguage = localStorage.getItem('language') || (g_data && g_data.language_settings) || "tr";
     if (savedLanguage) {
         loadLanguage(savedLanguage);
     } else {

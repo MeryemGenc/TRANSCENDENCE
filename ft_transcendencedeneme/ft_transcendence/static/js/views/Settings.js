@@ -1,7 +1,7 @@
 
 import AbstractView from "./AbstractView.js";
 import { loadLanguage, translate } from "./../LanguageManager.js";
-import { g_data } from "/static/js/api.js"; 
+import { g_data, set_g_data } from "/static/js/api.js"; 
 import { login_init } from "/static/js/login/login.js";
 
 export default class extends AbstractView {
@@ -11,7 +11,11 @@ export default class extends AbstractView {
     }
 
     async getHtml() {
+        await this.loadUserData();
 
+        let avatar = (g_data && g_data.avatar_path) || "./static/images/userprofile.png";
+        let span = (g_data && g_data.username) || "user";
+        let input = (g_data && g_data.nickname) || (g_data && g_data.username) || "nickname";
         // HTML şablonunu oluşturuyoruz
         return `
             <div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
@@ -19,21 +23,21 @@ export default class extends AbstractView {
                     <h2 class="text-center mb-4">User Settings</h2>
                     <div class="text-center mb-4">
                         <div class="profile-pic mx-auto">
-                            <img id="profilePreview" src="./static/images/userprofile.png"}" >
+                            <img id="profilePreview" src=${avatar} >
                         </div>
                         <div>
                             <label for="profileImageUpload" class="btn btn-sm btn-secondary mt-3">Upload Photo</label>
                             <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
                         </div>
                         <div id="usernameDisplay" class="mt-3">
-                            <span id="nickname_span" class="h5 d-block"></span>
+                            <span id="nickname_span" class="h5 d-block">${span}</span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="mb-3">
                             <label for="inputNickname">Nickname</label>
-                            <input id="nickname_input" class="form-control" type="text" id="inputNickname">
+                            <input class="form-control" value=${input} type="text" id="inputNickname">
                         </div>
                         <div class="mb-4">
                             <label for="languageSwitcher">Dil Seçimi</label>
@@ -59,6 +63,27 @@ export default class extends AbstractView {
             </div>
         `;
     }
+
+    async loadUserData() {
+        if (!g_data) {
+            // API'den veriyi al
+            // g_data = await fetchUserData(); 
+            console.log("data yok. Local storage koontrol ediliyor..."); 
+            const storedData = localStorage.getItem('g_data');
+            if (storedData) {
+                // Veriyi JSON.parse ile obje haline getiriyoruz
+                // g_data = JSON.parse(storedData);
+                set_g_data(JSON.parse(storedData));
+                console.log("g_data local storage'dan çekiliyor...");
+            } else {
+                console.log('g_data bulunamadı.');
+            }
+            return ;
+        }
+        console.log("data varr");
+    }
+
+   
 
 }
 

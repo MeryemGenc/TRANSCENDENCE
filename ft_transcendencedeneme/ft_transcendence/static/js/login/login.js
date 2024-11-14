@@ -18,25 +18,14 @@ import { g_data } from "../api.js";
 
 
 export function login_init() {
-    console.log("loginned");
+    // console.log("loginned");
 
     nav_label_change();
-    // label settings
-    let avatar =  document.getElementById("profilePreview");
-    let span =  document.getElementById("nickname_span");
-    let input =  document.getElementById("nickname_input");
-
-    if (avatar)
-    {
-        console.log("avatar");
-        avatar.src = g_data && g_data.avatar_path || "./static/images/userprofile.png";
-    }
-    if (span)
-        span.innerText = g_data && g_data.username || "user";
-    if (input)
-        input.placeholder = g_data && g_data.nickname || g_data.username || "nickname";
+}
 
 
+export function isAuthenticated() {
+    return (document.cookie && document.cookie.split(';').some((item) => item.trim().startsWith('access_token=')));
 }
 
 

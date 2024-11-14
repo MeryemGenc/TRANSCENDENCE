@@ -2,42 +2,18 @@
 import { g_data } from "./api.js";
 
 export function nav_label_change() {
-    let name = "name";
-    let path = "./static/images/userprofile.png";
-    const navbar_main_span = document.querySelector('#navbar_main_span');
-    if (navbar_main_span){
-        console.log("var");
-        navbar_main_span.style = "flex!important;";
-        if (g_data) {
-            let navbar_label_span = document.querySelector('#navbar_label_span');
-            name = g_data.username;
-            navbar_label_span.textContent = name;
-            // path = g_data.avatar_path;
-            
-            // label settings
-            let avatar =  document.getElementById("profilePreview");
-            let span =  document.getElementById("nickname_span");
-            let input =  document.getElementById("nickname_input");
-        
-            if (avatar)
-            {
-                console.log("avatar");
-                avatar.src = g_data && g_data.avatar_path || "./static/images/userprofile.png";
-            }
-            else
-                console.log("avatar yok");
-        
-            if (span)
-                span.innerText = g_data && g_data.username || "user";
-            if (input)
-                input.placeholder = g_data && g_data.nickname || g_data.username || "nickname";
-        }
+    // const navbar_main_span = document.querySelector('#navbar_main_span');
+    // const navbar_label_span = document.querySelector('#navbar_label_span');
+    const navbar = document.querySelector('#main_navbar');
+    
+    try {
+        // console.log("var");
+        navbar.style = "display: flex!important;";
+        navbar_label_span.textContent = (g_data && g_data.username) || 'name';
+        profile_img_id.src = (g_data && g_data.avatar_path) || "/static/images/userprofile.png";
+    } catch (error) {
+        console.log("navbar changed: ", error);
     }
-    else
-        console.log("yok");
-
-
-
 }
 
 

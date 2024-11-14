@@ -9,7 +9,8 @@ import Settings from "./views/Settings.js";
 import Login from "./views/Login.js";
 import FourPong3d from "./views/FourPong3d.js";
 
-import { fetchProtectedData } from "./api.js";
+import { fetchProtectedData, deleteUserAccount } from "./api.js";
+import { login_init, isAuthenticated } from "./login/login.js";
 
 
 import { popstate_two_players_game_events, startGame } from "./games/pong/twopong.js";
@@ -17,7 +18,7 @@ import { startGame_3d } from "./games/tournament/tournamentPong3d.js";
 import { getGame_entry_count, setGame_entry_count, save_btn_events, start_btn_events, popstate_tournament_events } from "./games/tournament/tournament.js";
 import { initializeConfettiCanvas } from "./games/tournament/confetti.js";
 import { loadLanguage, initializeLanguage, translate, applyTranslations } from "./LanguageManager.js";
-import { profile_img_src, SettingsEvents } from "./settings/setting.js";
+import { profile_img_src, SettingsEvents, save_button_events } from "./settings/setting.js";
 import { games_customization } from "./games/games.js";
 
 // PONG - oyun durumu yönetimi
@@ -35,14 +36,36 @@ export function getGameRunning_3d() { return gameRunning_3d; }
 // export function ttt_setGameRunning(value) { ttt_gameRunning = value; }
 // export function ttt_getGameRunning() { return ttt_gameRunning; }
 
+let auth_flag = 0;
 export const navigateTo = url => {
-	sessionStorage.setItem("previousPath", url);
-    history.pushState({ pathname: url }, null, url);
+	if (isAuthenticated())
+	{
+		fetchProtectedData();
+		sessionStorage.setItem("previousPath", url);
+		history.pushState({ pathname: url }, null, url);
+	}
+	else {
+
+		const navbar = document.querySelector('#main_navbar');
+        navbar.style = "display: none!important;";
+		console.log("dfdfds");
+	}
+	if(auth_flag)
+	{
+		sessionStorage.setItem("previousPath", url);
+		history.pushState({ pathname: url }, null, url);
+	}
     router();
 };
 
 const router = async () => {
 
+	if (!isAuthenticated() &&  !auth_flag) {
+		auth_flag = 1;
+        navigateTo('/login');
+        return;
+    }
+	auth_flag = 0;
     if (gameRunning) stopGame_3d();
 
     const routes = [
@@ -81,9 +104,10 @@ const router = async () => {
     // Ayarlar sayfasındaysanız dil değiştirici için olay dinleyici ekleyin
     if (view instanceof Settings) {
         const languageSwitcher = document.getElementById('language-switcher');
-        languageSwitcher.value = g_data.language_settings ? g_data.language_settings : 'en';
+		let lang_tmp = (g_data && g_data.language_settings) || 'en';
+        languageSwitcher.value = lang_tmp;
 
-		document.querySelector(`#language-switcher option[value="${g_data.language_settings}"]`).selected = true;
+		document.querySelector(`#language-switcher option[value="${lang_tmp}"]`).selected = true;
 		
         languageSwitcher.addEventListener('change', (e) => {
             loadLanguage(e.target.value);
@@ -122,23 +146,29 @@ document.addEventListener("DOMContentLoaded", () => {
 		else if (e.target.matches("#start_btn")) {
 			start_btn_events();
 		}
-		else if (e.target.matches("#deleteAccountBtn")) {
-			if (confirm("Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.")) {
-				alert("Hesabınız başarıyla silindi.");
-			}
-		} 
-		else if (e.target.matches("#logoutBtn")) {
-			if (confirm("Oturumu kapatmak istediğinizden emin misiniz?")) {
-				alert("Oturumunuz kapatıldı.");
-			}
+		if (e.target.matches("#logoutBtn")) {
+			// Çerezinizi temizleyin
+			document.cookie = "access_token" + '=; Max-Age=-99999999;';	
+			localStorage.removeItem("language");
+			navigateTo('/login');
+			console.clear();
+			alert("Oturumunuz başarıyla kapatıldı.");
 		}
 		else if (e.target.matches("#save_button_id_profile")) {
 			document.getElementById('profile_img_id').src = profile_img_src;
 			let inputnickname = document.getElementById("inputNickname").value;
 			if (inputnickname)
 				{
-					document.getElementById("nickname_span").textContent = inputnickname;
+					save_button_events();
+					// fetchProtectedData();
+					setTimeout(fetchProtectedData, 500);
+					// document.getElementById("nickname_span").textContent = g_data.nickname;
 					alert("Değişiklikler kaydedildi.");
+					// navigateTo('/settings');
+					// label img güncelle
+					// console.log("g_data" + g_data.avatar_path);
+    				// const profile_img_id = document.querySelector('#profile_img_id');
+					// profile_img_id.src = (g_data && g_data.avatar_path) || "/static/images/userprofile.png";
 				}
 			else
 				alert("Lütfen bir nickname giriniz.");
@@ -166,14 +196,30 @@ document.addEventListener("DOMContentLoaded", () => {
 			
             startGame();
         }
-		if (location.pathname === "/settings")
-		{
-			document.getElementById("profileImageUpload").addEventListener("change", function () {
-				SettingsEvents(this);
-			});
+		// if (location.pathname === "/settings") // aşağıda yazdım bunu
+		// {
+		// 	document.getElementById("profileImageUpload").addEventListener("change", function () {
+		// 		SettingsEvents(this);
+		// 	});
+		// }
+		// DELETE BUTONU
+		else if (e.target.matches("#deleteAccountBtn")) {
+			deleteUserAccount();
+
+			document.cookie = "access_token" + '=; Max-Age=-99999999;';	
+			localStorage.removeItem("language");
+			navigateTo('/login');
+			console.clear();
+			alert("Oturumunuz başarıyla kapatıldı.");
 		}
-			
     });
+
+
+    document.body.addEventListener("change", e => {
+		if (e.target.matches("#profileImageUpload")){
+			SettingsEvents(e.target);
+		}
+	});
 
 	router();
 
@@ -192,4 +238,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		router();
 		sessionStorage.setItem("previousPath", location.pathname);
 	});
+
+	if (isAuthenticated())
+	{
+		login_init();
+	}
 });

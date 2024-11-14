@@ -9,7 +9,9 @@ urlpatterns = [
     path('login', index, name='login'),
     path('games', index, name='games'),
     path('settings', index, name='settings'),
+    path('twopong3d', index, name='pong'),
     path('authapp/', include('authapp.urls')),
     path('api/', include('UserApi.urls')),
     path('api/user/', include('UserChangedApi.urls')),
+    path('api/user/', include('GDPRUserDelete.urls')),
 ]

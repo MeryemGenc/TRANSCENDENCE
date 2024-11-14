@@ -65,9 +65,13 @@ class AuthRedirectView(APIView):
             access_token = str(refresh.access_token)
 
             response = Response({'access_token': access_token}, status=status.HTTP_200_OK)
-            response.set_cookie('access_token', access_token, max_age=3600, httponly=False)
+            response = redirect('dashboard')
+            response.set_cookie('access_token', access_token, max_age=3600, httponly=False ,secure=True)
+            
+            
 
             return response
+            
 
         auth_url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.CLIENT_ID}&redirect_uri={settings.REDIRECT_URI}&response_type=code"
         return redirect(auth_url)

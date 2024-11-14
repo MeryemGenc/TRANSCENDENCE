@@ -1,5 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,19 +10,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^j4+obt#jzm@qhph*2@dlj^oc$%3-3qbn92uscyhp&&ey1r!!+'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'localhost:8000'])
 
 
 # 42 API kimlik bilgileri
-CLIENT_ID = 'u-s4t2ud-0a22e09e6c53ae440cbd9773d652675ccab942984d6338f8c98f6dd4e6e07540'
-CLIENT_SECRET = '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'
-REDIRECT_URI = 'http://127.0.0.1:8000/authapp/auth/redirect/'
+CLIENT_ID = env('CLIENT_ID')
+CLIENT_SECRET = env('CLIENT_SECRET')
+REDIRECT_URI = env('REDIRECT_URI')
 
 # JWT Authentication settings
 REST_FRAMEWORK = {
@@ -28,6 +34,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
 
 # settings.py
 # rest_framework_simplejwt ayarları
@@ -37,14 +44,11 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    'SIGNING_KEY': env('DJANGO_JWT_SECRET_KEY'),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',  # UserProfile modelinizdeki ID alanını kullanıyoruz
     'USER_ID_CLAIM': 'user_id',
 }
-
-
-
 
 
 # Application definition
@@ -63,7 +67,7 @@ INSTALLED_APPS = [
     'UserApi',
     'corsheaders',
     'UserChangedApi',
-
+    'GDPRUserDelete',
 ]
 
 MIDDLEWARE = [
@@ -110,11 +114,11 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'transcendence',
-        'USER': 'ctoptas',
-        'PASSWORD': '2001',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
@@ -166,5 +170,3 @@ CSRF_COOKIE_SECURE = False  # HTTPS gereksiz olduğu için False yapıyoruz
 # SameSite ayarını Strict veya Lax olarak bırakabilirsiniz
 SESSION_COOKIE_SAMESITE = 'Lax'  # SameSite'ı Lax olarak bırakmak genellikle yeterlidir
 CSRF_COOKIE_SAMESITE = 'Lax'  # SameSite'ı Lax olarak bırakmak genellikle yeterlidir
-
-
