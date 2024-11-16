@@ -27,13 +27,13 @@ class UpdateUserProfileView(APIView):
 
         # Gelen veriyi UserProfile modelinde güncelle
         user.nickname = data.get("nickname", user.nickname)
-        user.avatar_path = data.get("avatar_path", user.avatar_path)
+        user.medium_image = data.get("medium_image", user.medium_image)
         user.language_settings = data.get("language_settings", user.language_settings)
         user.save()
 
         return Response({
             "message": "Kullanıcı bilgileri güncellendi",
             "nickname": user.nickname,
-            "avatar_path": user.avatar_path,
+            "medium_image": user.medium_image,
             "language_settings": user.language_settings
         })

@@ -19,7 +19,6 @@ class UserProfile(models.Model):
 
     # API'den gelmeyen özel alanlar
     nickname = models.CharField(max_length=100, blank=True, null=True)
-    avatar_path = models.CharField(max_length=255, blank=True, null=True, default='./static/images/kiz.png')
     language_settings = models.CharField(max_length=10, blank=True, null=True ,default='tr')   # ISO dil kodu için örnek: 'en', 'fr' gibi.
 
     def __str__(self):

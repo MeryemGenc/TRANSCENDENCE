@@ -13,7 +13,7 @@ export default class extends AbstractView {
     async getHtml() {
         await this.loadUserData();
 
-        let avatar = (g_data && g_data.avatar_path) || "./static/images/userprofile.png";
+        let avatar = (g_data && g_data.medium_image) || "./static/images/userprofile.png";
         let span = (g_data && g_data.username) || "user";
         let input = (g_data && g_data.nickname) || (g_data && g_data.username) || "nickname";
         // HTML şablonunu oluşturuyoruz
@@ -24,10 +24,6 @@ export default class extends AbstractView {
                     <div class="text-center mb-4">
                         <div class="profile-pic mx-auto">
                             <img id="profilePreview" src=${avatar} >
-                        </div>
-                        <div>
-                            <label for="profileImageUpload" class="btn btn-sm btn-secondary mt-3">Upload Photo</label>
-                            <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
                         </div>
                         <div id="usernameDisplay" class="mt-3">
                             <span id="nickname_span" class="h5 d-block">${span}</span>
@@ -80,7 +76,7 @@ export default class extends AbstractView {
             }
             return ;
         }
-        console.log("data varr");
+        console.log("data mevcut.");
     }
 
    

@@ -10,9 +10,9 @@ export function nav_label_change() {
         // console.log("var");
         navbar.style = "display: flex!important;";
         navbar_label_span.textContent = (g_data && g_data.username) || 'name';
-        profile_img_id.src = (g_data && g_data.avatar_path) || "/static/images/userprofile.png";
+        profile_img_id.src = (g_data && g_data.medium_image) || "/static/images/userprofile.png";
     } catch (error) {
-        console.log("navbar changed: ", error);
+        console.log("navbar change err: ", error);
     }
 }
 

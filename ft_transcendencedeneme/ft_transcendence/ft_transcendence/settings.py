@@ -35,7 +35,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
 # settings.py
 # rest_framework_simplejwt ayarları
 SIMPLE_JWT = {

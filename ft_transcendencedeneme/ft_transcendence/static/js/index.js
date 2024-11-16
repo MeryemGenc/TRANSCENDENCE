@@ -10,6 +10,7 @@ import Login from "./views/Login.js";
 import FourPong3d from "./views/FourPong3d.js";
 
 import { fetchProtectedData, deleteUserAccount } from "./api.js";
+// import { fetchProtectedData, deleteUserAccount, uploadProfileImage } from "./api.js";
 import { login_init, isAuthenticated } from "./login/login.js";
 
 
@@ -18,7 +19,7 @@ import { startGame_3d } from "./games/tournament/tournamentPong3d.js";
 import { getGame_entry_count, setGame_entry_count, save_btn_events, start_btn_events, popstate_tournament_events } from "./games/tournament/tournament.js";
 import { initializeConfettiCanvas } from "./games/tournament/confetti.js";
 import { loadLanguage, initializeLanguage, translate, applyTranslations } from "./LanguageManager.js";
-import { profile_img_src, SettingsEvents, save_button_events } from "./settings/setting.js";
+import { save_button_events } from "./settings/setting.js";
 import { games_customization } from "./games/games.js";
 
 // PONG - oyun durumu yönetimi
@@ -48,7 +49,7 @@ export const navigateTo = url => {
 
 		const navbar = document.querySelector('#main_navbar');
         navbar.style = "display: none!important;";
-		console.log("dfdfds");
+		// console.log("dfdfds");
 	}
 	if(auth_flag)
 	{
@@ -155,11 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			alert("Oturumunuz başarıyla kapatıldı.");
 		}
 		else if (e.target.matches("#save_button_id_profile")) {
-			document.getElementById('profile_img_id').src = profile_img_src;
+			// document.getElementById('profile_img_id').src = profile_img_src;
 			let inputnickname = document.getElementById("inputNickname").value;
 			if (inputnickname)
 				{
+					// uploadProfileImage();
 					save_button_events();
+					// uploadProfileImage();
 					// fetchProtectedData();
 					setTimeout(fetchProtectedData, 500);
 					// document.getElementById("nickname_span").textContent = g_data.nickname;
@@ -196,12 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			
             startGame();
         }
-		// if (location.pathname === "/settings") // aşağıda yazdım bunu
-		// {
-		// 	document.getElementById("profileImageUpload").addEventListener("change", function () {
-		// 		SettingsEvents(this);
-		// 	});
-		// }
 		// DELETE BUTONU
 		else if (e.target.matches("#deleteAccountBtn")) {
 			deleteUserAccount();
@@ -216,9 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     document.body.addEventListener("change", e => {
-		if (e.target.matches("#profileImageUpload")){
-			SettingsEvents(e.target);
-		}
+		// if (e.target.matches("#profileImageUpload")){
+		// 	SettingsEvents(e.target);
+		// 	// uploadProfileImage(); // burada ddeğil de  save btonu ile çalışması gerek .???
+		// }
 	});
 
 	router();

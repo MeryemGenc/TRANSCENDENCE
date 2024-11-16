@@ -29,6 +29,6 @@ class ProtectedView(APIView):
             'username': user.login,
             'email': user.email,
             'nickname': user.nickname,
-            'avatar_path': user.avatar_path,
-            'language_settings': user.language_settings  # ISO dil kodu (örneğin, 'tr' veya 'en')
+            'language_settings': user.language_settings,  # ISO dil kodu (örneğin, 'tr' veya 'en')
+            'medium_image': user.medium_image
         })
