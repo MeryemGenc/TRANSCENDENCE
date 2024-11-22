@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import UserProfile
+from django.http import HttpResponseRedirect
 
 class AuthRedirectView(APIView):
     def get(self, request):
@@ -65,10 +66,9 @@ class AuthRedirectView(APIView):
             access_token = str(refresh.access_token)
 
             response = Response({'access_token': access_token}, status=status.HTTP_200_OK)
-            response = redirect('dashboard')
             response.set_cookie('access_token', access_token, max_age=3600, httponly=False ,secure=True)
-            
-            
+            response = HttpResponseRedirect('https://127.0.0.1')
+            response['X-Forwarded-Proto'] = 'https'
 
             return response
             

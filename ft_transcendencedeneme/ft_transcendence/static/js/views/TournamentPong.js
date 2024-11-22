@@ -12,6 +12,11 @@ export default class extends AbstractView {
 		<canvas id="canvas_confetti"></canvas>
             <div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
         		<div class="row justify-content-between align-items-center w-100">
+					 <div class="d-flex justify-content-center p-3">
+        					<button id="pause_button_tournament" type="button" class="btn p-0" style="width: 64px; height: 64px; border-radius: 50%;" disabled>
+            					<img id="pause_button_tournament_img" src="/static/images/pause.png" alt="Button Image" style="width: 100%; height: 100%; border-radius: 50%; pointer-events: none;">
+        					</button>
+					</div>
         		    <!-- Player 1 Profile -->
         		    <div class="col-2 text-center">
         		        <div class="card bg-dark text-light p-3 border-light">

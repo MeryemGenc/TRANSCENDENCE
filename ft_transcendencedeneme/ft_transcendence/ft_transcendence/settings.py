@@ -7,26 +7,29 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env')) 
+
+# settings.py'de
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DJANGO_DEBUG', default=True)
+DEBUG = os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'localhost:8000'])
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+
+USE_X_FORWARDED_HOST = True
 
 
 # 42 API kimlik bilgileri
-CLIENT_ID = env('CLIENT_ID')
-CLIENT_SECRET = env('CLIENT_SECRET')
-REDIRECT_URI = env('REDIRECT_URI')
+CLIENT_ID = os.environ.get('CLIENT_ID')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+REDIRECT_URI = os.environ.get('REDIRECT_URI')
 
 # JWT Authentication settings
 REST_FRAMEWORK = {
@@ -34,6 +37,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # settings.py
 # rest_framework_simplejwt ayarları
@@ -43,7 +49,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': env('DJANGO_JWT_SECRET_KEY'),
+    'SIGNING_KEY': os.environ.get('DJANGO_JWT_SECRET_KEY'),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',  # UserProfile modelinizdeki ID alanını kullanıyoruz
     'USER_ID_CLAIM': 'user_id',
@@ -93,7 +99,7 @@ ROOT_URLCONF = 'ft_transcendence.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Templates klasörünü burada tanımla
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Doğru dizini belirtin
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,6 +112,7 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
 
@@ -113,13 +120,14 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+        'NAME': os.environ.get('POSTGRES_DB', 'transendence'),
+        'USER': os.environ.get('POSTGRES_USER', 'ctoptas'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', '2001'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
+
 
 
 # Password validation
@@ -147,24 +155,20 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'  # URL path for static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Where collectstatic will collect files
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Proje düzeyinde statik dosyaların bulunduğu klasör
+    os.path.join(BASE_DIR, 'static'),  # Your project's static files
 ]
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# static dosyaların toplanacağı yer (prodüksiyon için)
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
 # settings.py
 
 # Çerezlerin HTTP üzerinden gönderilebilmesi için Secure özelliğini kapatıyoruz
-SESSION_COOKIE_SECURE = False  # HTTPS gereksiz olduğu için False yapıyoruz
-CSRF_COOKIE_SECURE = False  # HTTPS gereksiz olduğu için False yapıyoruz
+SESSION_COOKIE_SECURE = True  # HTTPS gereksiz olduğu için False yapıyoruz
+CSRF_COOKIE_SECURE = True  # HTTPS gereksiz olduğu için False yapıyoruz
 
 # SameSite ayarını Strict veya Lax olarak bırakabilirsiniz
 SESSION_COOKIE_SAMESITE = 'Lax'  # SameSite'ı Lax olarak bırakmak genellikle yeterlidir

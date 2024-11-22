@@ -9,59 +9,73 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-			<div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
-				<div class="row justify-content-between align-items-center w-100">
-					
-					<!-- Player 1 Profile (Top, Image on Left) -->
-					<div class="col-12 text-center mb-3">
-						<div class="card bg-dark text-light p-3 border-light d-flex flex-row align-items-center justify-content-start" style="width: 20%; margin: 0 auto;">
-							<img src="#" id="pong_img_plyr1" class="rounded-circle me-3" style="width: 80px; height: 80px;">
-							<div class="text-start">
-								<p class="fs-4 text-bold mb-1" style="color: cyan" id="pong_t_player1">Player 1</p>
-								<p class="fs-5 text-bold" id="pong_score_player1">0</p>
-							</div>
-						</div>
-					</div>
+		
+		     
 
-					<!-- Left Game Area (Player 2) -->
-					<div class="col-2 text-center">
-						<div class="card bg-dark text-light p-3 border-light d-inline-block">
-							<img src="#" id="pong_img_plyr2" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
-							<p class="fs-4 text-bold" style="color: cyan" id="pong_t_player2">Player 2</p>
-							<p class="fs-4 text-bold" id="pong_score_player2">0</p>
-						</div>
-					</div>
+		<div class="container bg_color d-flex justify-content-center align-items-center" style="height: 100vh;">	
 
-					<!-- Game Board in Center -->
-					<div class="col-8 d-flex justify-content-center align-items-center bg-black border-danger rounded" style="height: 650px;">
-						<div id="pong_board" class="d-flex flex-column justify-content-center align-items-center flex-grow-1">
-							<button data-translate="PLAY" id="pong_game_button" type="button" class="btn btn-info">
-								${translate("PLAY")}
-							</button>
-						</div>
-					</div>
+		<div class="position-absolute dynamic-top" style="left: 50%; transform: translate(-50%, -50%);">
+    		<button id="pause_button_four" type="button" class="btn p-0" style="width: 64px; height: 64px; border-radius: 50%;" disabled>
+        		<img id="pause_button_four_img" src="/static/images/pause.png" alt="Button Image" style="width: 100%; height: 100%; border-radius: 50%; pointer-events: none;">
+    		</button>
+		</div>
+			
+		<!-- Oyun Alanı (600px x 600px siyah kare) -->
+		<div id="four_pong_board" class="position-relative" style="width: 600px; height: 600px; background-color: black;">
+		<button data-translate="PLAY" id="four_pong_play_button" type="button" class="btn btn-info" data-mdb-ripple-init>${translate("PLAY")}</button>
+	  
 
-					<!-- Right Game Area (Player 4) -->
-					<div class="col-2 text-center">
-						<div class="card bg-dark text-light p-3 border-light d-inline-block">
-							<img src="#" id="pong_img_plyr4" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
-							<p class="fs-4 text-bold" style="color: cyan" id="pong_t_player4">Player 4</p>
-							<p class="fs-4 text-bold" id="pong_score_player4">0</p>
-						</div>
-					</div>
 
-					<!-- Bottom Profile (Player 3, Image on Left) -->
-					<div class="col-12 text-center mt-3">
-						<div class="card bg-dark text-light p-3 border-light d-flex flex-row align-items-center justify-content-start" style="width: 70%; margin: 0 auto;">
-							<img src="#" id="pong_img_plyr3" class="rounded-circle me-3" style="width: 80px; height: 80px;">
-							<div class="text-start">
-								<p class="fs-4 text-bold mb-1" style="color: cyan" id="pong_t_player3">Player 3</p>
-								<p class="fs-5 text-bold" id="pong_score_player3">0</p>
-							</div>
-						</div>
-					</div>
-				</div>
+			
+		  <!-- Sol Kart (Profil Resmi, Nickname ve Score) -->
+		  <div class="position-absolute" style="top: 50%; left: -110px; transform: translateY(-50%);">
+			<div class="card bg-dark text-light" style="width: 100px; height: 200px;">
+			  <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+				<img src="./static/images/player1.png" class="rounded-circle" style="width: 50px; height: 50px;">
+			  </div>
+			  <div class="text-center" style="color: cyan; font-weight: bold;">Player 1</div>
+			  <div id="four_pong_score_1" class="text-center" style="color: white; font-weight: bold;">0</div> <!-- Score -->
 			</div>
+		  </div>
+
+		  
+	  
+		  <!-- Üst Kart (Profil Resmi, Nickname ve Score) -->
+		  <div class="position-absolute" style="top: -110px; left: 50%; transform: translateX(-50%);">
+			<div class="card bg-dark text-light" style="width: 200px; height: 100px;">
+			  <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+				<img src="./static/images/player2.png" class="rounded-circle" style="width: 50px; height: 50px;">
+			  </div>
+			  <div class="text-center" style="color: cyan; font-weight: bold;">Player 2</div>
+			  <div id="four_pong_score_2" class="text-center" style="color: white; font-weight: bold;">0</div> <!-- Score -->
+			</div>
+		  </div>
+	  
+		  <!-- Sağ Kart (Profil Resmi, Nickname ve Score) -->
+		  <div class="position-absolute" style="top: 50%; right: -110px; transform: translateY(-50%);">
+			<div class="card bg-dark text-light" style="width: 100px; height: 200px;">
+			  <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+				<img src="./static/images/player3.png" class="rounded-circle" style="width: 50px; height: 50px;">
+			  </div>
+			  <div class="text-center" style="color: cyan; font-weight: bold;">Player 3</div>
+			  <div id="four_pong_score_3" class="text-center" style="color: white; font-weight: bold;">0</div> <!-- Score -->
+			</div>
+		  </div>
+	  
+		  <!-- Alt Kart (Profil Resmi, Nickname ve Score) -->
+		  <div class="position-absolute" style="bottom: -110px; left: 50%; transform: translateX(-50%);">
+			<div class="card bg-dark text-light" style="width: 200px; height: 100px;">
+			  <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+				<img src="./static/images/player4.png" class="rounded-circle" style="width: 50px; height: 50px;">
+			  </div>
+			  <div class="text-center" style="color: cyan; font-weight: bold;">Player 4</div>
+			  <div id="four_pong_score_4" class="text-center" style="color: white; font-weight: bold;">0</div> <!-- Score -->
+			</div>
+		  </div>
+	  
+		</div>
+	  </div>
+
         `;
     }
 }

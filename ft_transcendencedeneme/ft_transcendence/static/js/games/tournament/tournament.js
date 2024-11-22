@@ -1,5 +1,9 @@
-import { getGameRunning_3d,setGameRunning_3d, navigateTo, setGameRunning } from "../../index.js";
+import { getGameRunning_3d,setGameRunning_3d, setGameRunning } from "../../index.js";
 import { initializeConfettiCanvas } from './confetti.js';
+import { translate } from "../../LanguageManager.js";
+
+
+let flag = 1;
 
 export let game_entry_count = sessionStorage.getItem("gameEntryCount") 
     ? parseInt(sessionStorage.getItem("gameEntryCount"), 10) 
@@ -80,13 +84,16 @@ export function popstate_tournament_events()
 {
 	if (getGameRunning_3d())
 		setGameRunning_3d(false);
-		alert('Exiting the tournament.');
+	if (flag)
+		alert(translate("t_EXIT"));
 		if (window.location.pathname === '/games')
 			{
 				hideModal('Modal-tournament-match');
 				hideModal('Modal-tournament');
 			}
 		exit_tournament();
+		reset_elements();
+		flag = 1;
 }
 
 export function hideModal(modalId) {
@@ -152,10 +159,10 @@ export function save_btn_events()
 		const is_unique = are_nicknames_unique(player1.name, player2.name, player3.name, player4.name);
 		if(!is_unique)
 			{
-				alert('Players are not unique');
+				alert(translate("t_PLAYERS_NOT_UNIQUE"));
 				return;
 			}
-		alert('Players saved successfully!');
+		alert(translate("t_PLAYERS_SAVE_SUCCESS"));
         hideModal('Modal-tournament');
 		matching();
 		var match_modal = new bootstrap.Modal(document.getElementById('Modal-tournament-match'), {
@@ -164,7 +171,7 @@ export function save_btn_events()
 		});
 		match_modal.show();
     } else {
-		alert('Please fill in all nickname fields.');
+		alert(translate("t_FILL_NICK"));
     }
 }
 
@@ -194,6 +201,7 @@ export function start_btn_events()
 
 export function second_match(winnerPlayerIndex, game_entry_count)
 {
+	document.getElementById("pause_button_tournament").disabled = true;
 	document.getElementById('score_player1').textContent = '0';
 	document.getElementById('score_player2').textContent = '0';
 	document.getElementById('img_plyr1').src = '#';
@@ -267,9 +275,8 @@ export function second_match(winnerPlayerIndex, game_entry_count)
 				finish_btn_container.appendChild(newButton);
 
 				document.getElementById('finish_btn').addEventListener('click', function() {
-					navigateTo('/games');
-					exit_tournament();
-					reset_elements();
+					flag = 0;
+					history.back();
 			});
 		}
 	}
@@ -344,7 +351,7 @@ function tournament_modal_put_image_and_name(firstplayer, secondplayer, thirdpla
 }
 
 export function exit_tournament()
-{
+{		
 	hideModal('Modal-tournament-match');
 	next_players.pop();
 	next_players.pop();

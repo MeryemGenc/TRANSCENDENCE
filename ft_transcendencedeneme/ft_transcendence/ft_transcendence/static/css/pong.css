@@ -1,0 +1,22 @@
+#pong_game_button {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #00BFFF;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#pong_game_button:hover {
+    background-color: #008CBA; 
+}
+
+#pong_timer {
+    background-color: black;
+    color: green;
+}

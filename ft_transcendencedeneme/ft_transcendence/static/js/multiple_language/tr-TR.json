@@ -2,7 +2,7 @@
 {
     "settings_title": "SETTINGS",
     "settings_description": "SETTINGS description",
-    "GAMES": "OYUNLAR",
+    "GAME": "OYUN",
     "Four_Players": "Dört Kişilik",
     "Two_Players": "İki Kişilik",
     "Dark_Theme": "Koyu Tema",
@@ -16,5 +16,23 @@
     "n_HOME": "ANASAYFA",
     "n_LOGIN": "GİRİŞ YAP",
     "n_GAMES": "OYUNLAR",
-    "n_SETTINGS": "AYARLAR"
+    "n_SETTINGS": "AYARLAR",
+    "b_SAVE": "KAYDET",
+    "b_DELETE_ACCOUNT": "HESABI SİL",
+    "b_LOGOUT": "ÇIKIŞ YAP",
+    "h_USER_SETTINGS": "KULLANICI AYARLARI",
+    "l_LANGUAGE": "DİL SEÇİMİ",
+    "a_TOKEN": "Token bulunamadı! Lütfen giriş yapın.",
+    "a_DELETE_SUCCESS": "Hesap başarıyla silindi.",
+    "a_DELETE_FAIL": "Hesap silinemedi",
+    "a_ERROR": "Bir hata oluştu",
+    "a_LOGOUT_SUCCESS": "Oturumunuz başarıyla kapatıldı.",
+    "a_CHANGES_SUCCESS": "Değişiklikler kaydedildi.",
+    "a_ENTER_NICK": "Lütfen bir nickname giriniz.",
+    "g_EXIT": "Oyundan çıkılıyor.",
+    "g_WIN": "kazandı!",
+    "t_EXIT": "Turnuvadan çıkılıyor.",
+    "t_PLAYERS_NOT_UNIQUE": "Oyuncular benzersiz değil",
+    "t_PLAYERS_SAVE_SUCCESS": "Oyuncular başarıyla kaydedildi!",
+    "t_FILL_NICK": "Lütfen tüm takma ad alanlarını doldurun."
 }

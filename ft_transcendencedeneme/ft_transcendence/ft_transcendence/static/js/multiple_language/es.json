@@ -1,0 +1,22 @@
+
+
+{
+    "settings_title": "SETTINGS",
+    "settings_description": "SETTINGS description",
+    "GAMES": "JUEGOS",
+    "Single_Player": "Un Jugador",
+    "Two_Players": "Dos Jugadores",
+    "Dark_Theme": "Tema Oscuro",
+    "Light_Theme": "Tema Claro",
+    "Easy": "Fácil",
+    "Medium": "Medio",
+    "Hard": "Difícil",
+    "PLAY": "JUGAR",
+    "TOURNAMENT": "TORNEO",
+    "LOGIN": "Inicia Sesión Con 42",
+    "n_HOME": "HOGAR",
+    "n_LOGIN": "ACCESO",
+    "n_GAMES": "JUGUETES",
+    "n_SETTINGS": "AJUSTES"
+}
+

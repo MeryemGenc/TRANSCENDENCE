@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getGameRunning_3d, setGameRunning_3d}  from "../../index.js"
 import { navigateTo } from "../../index.js";
 import {second_match, firstplayer3d, secondplayer3d, game_entry_count, increaseCounter, exit_tournament, hideModal} from './tournament.js'
+import { difficulty_level, ball_size}  from "../games.js"
 // import { post_game_score }  from "../../api.js"
 
 
@@ -16,58 +17,12 @@ let keys = {};
 let boardWidth = 800, boardHeight = 600;
 let playerWidth = 8, playerHeight = 100;
 let playerSpeed = 5;
-let ballVelocityX = 3, ballVelocityY = 2;
+let ballVelocityX = 3, ballVelocityY = 3;
 let orbit;
 let animationId;
-// let scoreElement1, scoreElement2;
-// let scoreContainer;
+let isPaused = false;
+let ballSize = 10;
 
-
-
-// DOM tamamen yüklendiğinde oyunu başlat
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     if (window.location.pathname === '/tournamentpong') {
-//         window.addEventListener('popstate', (event) => {
-//             stopGame_3d();
-//     		// alert('Exiting the tournament.');
-// 			// hideModal('Modal-tournament-match');
-// 			// hideModal('Modal-tournament');
-// 			// navigateTo('/games');
-//         });
-//     }
-// });
-
-// Puan gösterimi için HTML elemanlarını oluştur
-// function setupScoreDisplay() {
-//     // const scoreContainer = document.createElement('div');
-//     scoreContainer.style.position = 'absolute';
-//     scoreContainer.style.top = '2%';
-//     scoreContainer.style.left = '50%';
-//     scoreContainer.style.transform = 'translateX(-50%)';
-//     scoreContainer.style.display = 'flex';
-//     scoreContainer.style.gap = '50px';
-//     scoreContainer.style.fontSize = '24px';
-//     scoreContainer.style.color = '#FFFFFF';
-//     scoreContainer.style.fontFamily = 'Arial, sans-serif';
-//     scoreContainer.style.zIndex = '1'; // Üstte kalmasını sağlar
-
-//     scoreElement1 = document.createElement('div');
-//     scoreElement1.id = 'score1';
-//     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
-
-//     scoreElement2 = document.createElement('div');
-//     scoreElement2.id = 'score2';
-//     scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
-
-//     scoreContainer.appendChild(scoreElement1);
-//     scoreContainer.appendChild(scoreElement2);
-
-//     // Skoru board_3d div'ine ekliyoruz
-//     const board_3d = document.getElementById("board_3d");
-//     board_3d.style.position = 'relative';  // Skor göstergesinin konumlandırılmasını sağlar
-//     board_3d.appendChild(scoreContainer);
-// }
 
 function keyDown(event) {
     keys[event.key.toLowerCase()] = true;
@@ -79,6 +34,14 @@ function keyUp(event) {
 }
 
 function initialGame_3d() {
+
+	if (ball_size === "small")
+		ballSize = 10;
+	else if (ball_size === "big")
+		ballSize = 20;
+
+	document.getElementById("pause_button_tournament").disabled = false;
+
     // scoreContainer = document.createElement('div');
     // console.log("\nplayer1score: " + player1Score + "\nplayer2score: " + player2Score)
     // Renderer, sahne ve kamera ayarları
@@ -113,20 +76,11 @@ function initialGame_3d() {
     scene.add(player2);
 
     // TOP
-    let sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
+    let sphereGeometry = new THREE.SphereGeometry(ballSize, 32, 32);
     let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xf72d93 });
     ball = new THREE.Mesh(sphereGeometry, sphereMaterial);
     resetBall();
     scene.add(ball);
-
-    // AÇIÇLAR (isteğe bağlı: zemin veya sınır olarak kullanılabilir)
-    /*
-    let planeGeometry = new THREE.PlaneGeometry(700, 500);
-    let planeMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, side: THREE.DoubleSide });
-    plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.rotation.x = Math.PI / 2;
-    scene.add(plane);
-    */
 
     // Aydınlatma
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
@@ -165,10 +119,34 @@ function addBoundaryLines() {
 
 // Topu merkeze sıfırlar ve hareket yönünü rastgele belirler
 function resetBall() {
+
+	let speed = 0;
+
+	if (difficulty_level === "easy"){
+		speed = 3;
+	}
+	else if (difficulty_level === "medium"){
+		speed = 5;
+	}
+	else if (difficulty_level === "hard"){
+		speed = 7;
+	}
+
     ball.position.set(0, 0, 0);
-    // Başlangıç yönünü rastgele belirle
-    ballVelocityX = Math.random() > 0.5 ? 3 : -3;
-    ballVelocityY = (Math.random() * 4) - 2; // Y yönlü hız -2 ile 2 arasında rastgele
+
+	let angle;
+
+	// Sağ çapraz (0 - π/6 ve 11π/6 - 2π arası)
+	if (Math.random() < 0.5) {
+	    angle = Math.random() * (Math.PI / 6) + (Math.random() < 0.5 ? 0 : 11 * Math.PI / 6);
+	} 
+	// Sol çapraz (5π/6 - π ve π - 7π/6 arası)
+	else {
+	    angle = Math.random() * (Math.PI / 6) + 5 * Math.PI / 6;
+	}
+
+	ballVelocityX = Math.cos(angle) * speed;
+	ballVelocityY = Math.sin(angle) * speed;
 }
 
 export function startGame_3d() {
@@ -176,9 +154,10 @@ export function startGame_3d() {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
+	isPaused = false;
 	playerSpeed = 5;
     ballVelocityX = 3;
-    ballVelocityY = 2;
+    ballVelocityY = 3;
     setGameRunning_3d(true);
     initialGame_3d();
 	if (getGameRunning_3d())
@@ -188,6 +167,9 @@ export function startGame_3d() {
 
 // Animasyon döngüsü
 function animate() {
+
+	if (isPaused) return;
+
     animationId = requestAnimationFrame(animate);
 
     if (orbit && orbit.update) {
@@ -205,6 +187,25 @@ function animate() {
     }
 
     renderer.render(scene, camera);
+}
+
+function detectCollisionRegion(ballY, paddleY, paddleHeight) {
+    const thirdHeight = paddleHeight / 3;
+
+    const upperBoundary = paddleY + (paddleHeight / 2);
+    const middleBoundaryTop = paddleY + (thirdHeight / 2);
+    const middleBoundaryBottom = paddleY - (thirdHeight / 2);
+    const lowerBoundary = paddleY - (paddleHeight / 2);
+
+    if (ballY > middleBoundaryTop && ballY <= upperBoundary) {
+        return 'upper';
+    } else if (ballY >= middleBoundaryBottom && ballY <= middleBoundaryTop) {
+        return 'middle';
+    } else if (ballY < middleBoundaryBottom && ballY >= lowerBoundary) {
+        return 'lower';
+    } else {
+        return 'none';
+    }
 }
 
 // Oyun mantığını günceller
@@ -254,24 +255,40 @@ function updateGameLogic() {
         ballVelocityY = -ballVelocityY;
     }
 
-    // Oyuncu1 ile çarpışma
-    if (ball.position.x - ball.geometry.parameters.radius <= player1.position.x + playerWidth / 2 &&
+     // Oyuncu1 ile çarpışma
+	 if (ball.position.x - ball.geometry.parameters.radius <= player1.position.x + playerWidth / 2 &&
         ball.position.y <= player1.position.y + playerHeight / 2 &&
         ball.position.y >= player1.position.y - playerHeight / 2) {
+
         ball.position.x = player1.position.x + playerWidth / 2 + ball.geometry.parameters.radius;
-        ballVelocityX = -ballVelocityX;
-        // İsteğe bağlı: Her çarpışmada hız artır
-        // increaseBallSpeed();
+		const region = detectCollisionRegion(ball.position.y, player1.position.y, 100);
+    	if (region === 'upper') {
+    	    ballVelocityY += 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'lower') {
+    	    ballVelocityY -= 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'middle') {
+    	    ballVelocityX *= -1;
+    	}
     }
 
     // Oyuncu2 ile çarpışma
     if (ball.position.x + ball.geometry.parameters.radius >= player2.position.x - playerWidth / 2 &&
         ball.position.y <= player2.position.y + playerHeight / 2 &&
         ball.position.y >= player2.position.y - playerHeight / 2) {
+
         ball.position.x = player2.position.x - playerWidth / 2 - ball.geometry.parameters.radius;
-        ballVelocityX = -ballVelocityX;
-        // İsteğe bağlı: Her çarpışmada hız artır
-        // increaseBallSpeed();
+		const region = detectCollisionRegion(ball.position.y, player2.position.y, 100);
+    	if (region === 'upper') {
+    	    ballVelocityY += 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'lower') {
+    	    ballVelocityY -= 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'middle') {
+    	    ballVelocityX *= -1;
+    	}
     }
 
     // Puanlama
@@ -297,11 +314,11 @@ function updateGameLogic() {
     if (firstplayer3d.score >= 1 || secondplayer3d.score >= 1) {
 		increaseCounter();
 		if (firstplayer3d.score == 1){
-			alert("Player 1 Win!");
+			alert("Player 1 " + translate("g_WIN"));
 			second_match(firstplayer3d.index, game_entry_count);
 		}
 		else if(secondplayer3d.score == 1) {
-			alert("Player 2 Win!");
+			alert("Player 2 " + translate("g_WIN"));
 			second_match(secondplayer3d.index,game_entry_count);
 		}
 		stopGame_3d();
@@ -329,21 +346,6 @@ function player1_up_point()
 	plyr2scr.textContent = firstplayer3d.score
 }
 
-// Topun hızını artırır (isteğe bağlı)
-// function increaseBallSpeed() {
-//     // Hızı çok hızlı olmasını engellemek için sınır koy
-//     const maxSpeed = 10;
-//     ballVelocityX = ballVelocityX > 0 ? Math.min(ballVelocityX + 0.5, maxSpeed) : Math.max(ballVelocityX - 0.5, -maxSpeed);
-//     ballVelocityY = ballVelocityY > 0 ? Math.min(ballVelocityY + 0.5, maxSpeed) : Math.max(ballVelocityY - 0.5, -maxSpeed);
-// }
-
-// Puanları günceller
-
-// function updateScore() {
-//     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
-//     scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
-// }
-
 export function stopGame_3d() {
     // Oyun devam ediyorsa durdur
     if (getGameRunning_3d())
@@ -358,15 +360,9 @@ export function stopGame_3d() {
     
     keys = {};
     
-    cleanUpScene(); 
-    // if (scoreContainer) {
-    //     scoreContainer.remove();
-    //     scoreContainer = null;
-    // }
-    // console.log("Oyun durduruldu.");
+    cleanUpScene();
     firstplayer3d.score = 0;
     secondplayer3d.score = 0;
-    // updateScore();
 }
 
 // Sahneyi temizler
@@ -395,4 +391,22 @@ function cleanUpScene() {
     // Sahne ve kamera temizle
     scene = null;
     camera = null;
+}
+
+export function pauseGameTournament() {
+    isPaused = true;
+    cancelAnimationFrame(animationId);
+    console.log("Game paused");
+	document.getElementById("pause_button_tournament_img").src = "./static/images/resume.png";
+	return isPaused;
+}
+
+export function resumeGameTournament() {
+    if (isPaused) {
+        isPaused = false;
+        animate();
+        console.log("Game resumed");
+		document.getElementById("pause_button_tournament_img").src = "./static/images/pause.png";
+		return isPaused;
+    }
 }
