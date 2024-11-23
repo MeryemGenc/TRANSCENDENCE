@@ -3,7 +3,7 @@
 {
     "settings_title": "SETTINGS",
     "settings_description": "SETTINGS description",
-    "GAMES": "JUEGOS",
+    "GAME": "JUEGO",
     "Single_Player": "Un Jugador",
     "Two_Players": "Dos Jugadores",
     "Dark_Theme": "Tema Oscuro",
@@ -17,6 +17,24 @@
     "n_HOME": "HOGAR",
     "n_LOGIN": "ACCESO",
     "n_GAMES": "JUGUETES",
-    "n_SETTINGS": "AJUSTES"
+    "n_SETTINGS": "AJUSTES",
+    "b_SAVE": "AHORRAR",
+    "b_DELETE_ACCOUNT": "ELIMINAR CUENTA",
+    "b_LOGOUT": "SALIDA",
+    "h_USER_SETTINGS": "AJUSTES DE USUARIO",
+    "l_LANGUAGE": "IDIOMA",
+    "a_TOKEN": "¡Token no encontrado! Por favor inicie sesión nuevamente.",
+    "a_DELETE_SUCCESS": "La cuenta ha sido eliminada exitosamente.",
+    "a_DELETE_FAIL": "No se pudo eliminar la cuenta",
+    "a_ERROR": "An error occurred",
+    "a_LOGOUT_SUCCESS": "Has cerrado tu sesión correctamente.",
+    "a_CHANGES_SUCCESS": "Los cambios se guardan.",
+    "a_ENTER_NICK": "Por favor ingrese un apodo.",
+    "g_EXIT": "Saliendo del juego.",
+    "g_WIN": "¡ganaste!",
+    "t_EXIT": "Saliendo del torneo.",
+    "t_PLAYERS_NOT_UNIQUE": "Los jugadores no son únicos",
+    "t_PLAYERS_SAVE_SUCCESS": "¡Jugadores guardados con éxito!",
+    "t_FILL_NICK": "Por favor, complete todos los campos de apodo."
 }
 

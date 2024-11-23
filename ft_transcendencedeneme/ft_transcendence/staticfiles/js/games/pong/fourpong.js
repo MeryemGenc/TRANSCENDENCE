@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { getGameRunning, setGameRunning, navigateTo}  from "../../index.js"
-import { difficulty_level, ball_size}  from "../games.js"
+import { getGameRunning, setGameRunning, navigateTo}  from "../../index.js";
+import { difficulty_level, ball_size}  from "../games.js";
+import { translate } from "../../LanguageManager.js";
 
 
 let player1score = 0;
@@ -21,12 +22,13 @@ let orbit;
 let animationId;
 let hitBall = 5;
 let ballSize = 10;
+let isPaused = false;
 
 
 export function popstate_four_players_game_events()
 {
 	stopGameFour();
-	alert('Exiting the game.');
+	alert(translate("g_EXIT"));
 }
 
 function keyDown(event) {
@@ -39,6 +41,8 @@ function keyUp(event) {
 }
 
 function initialGame_3d() {
+
+	document.getElementById("pause_button_four").disabled = false;
 
 	if (ball_size === "small")
 		ballSize = 10;
@@ -152,6 +156,7 @@ export function four_start_game() {
 	playerSpeed = 5;
     // ballVelocityX = 3;
     // ballVelocityY = 2;
+	isPaused = false;
     setGameRunning(true);
     initialGame_3d();
     animate();
@@ -159,6 +164,8 @@ export function four_start_game() {
 
 // Animasyon döngüsü
 function animate() {
+
+	if (isPaused) return;
     
     animationId = requestAnimationFrame(animate);
     orbit.update();
@@ -325,16 +332,16 @@ function updateGameLogic() {
     // score kontrol
     if (player1score >= 2 || player2score >= 2 || player3score >= 2 || player4score >= 2) {
 		if (player1score == 2){
-			alert("Player 1 Win!");
+			alert("Player 1 " + translate("g_WIN"));
 		}
 		else if(player2score == 2) {
-			alert("Player 2 Win!");
+			alert("Player 2 " + translate("g_WIN"));
 		}
 		else if(player3score == 2) {
-			alert("Player 3 Win!");
+			alert("Player 3 " + translate("g_WIN"));
 		}
 		else if(player4score == 2) {
-			alert("Player 4 Win!");
+			alert("Player 4 " + translate("g_WIN"));
 		}
 		stopGameFour();
 	return;
@@ -421,10 +428,11 @@ function score_update(hitball_number)
 
 export function stopGameFour() {
     // Oyun devam ediyorsa durdur
-    if (getGameRunning()) 
+    if (getGameRunning())
     { 
         // console.log("setGameRunning false");
-        setGameRunning(false); 
+        setGameRunning(false);
+		console.log('calisti');
         cancelAnimationFrame(animationId);
         animationId = null;
     }
@@ -477,4 +485,22 @@ function cleanUpScene() {
     // Sahne ve kamera temizle
     scene = null;
     camera = null;
+}
+
+export function pauseGameFour() {
+    isPaused = true;
+    cancelAnimationFrame(animationId);
+    console.log("Game paused");
+	document.getElementById("pause_button_four_img").src = "./static/images/resume.png";
+	return isPaused;
+}
+
+export function resumeGameFour() {
+    if (isPaused) {
+        isPaused = false;
+        animate(); // Döngüyü tekrar başlat
+        console.log("Game resumed");
+		document.getElementById("pause_button_four_img").src = "./static/images/pause.png";
+		return isPaused;
+    }
 }

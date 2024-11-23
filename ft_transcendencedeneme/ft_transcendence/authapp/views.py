@@ -1,3 +1,4 @@
+# views.py
 import requests
 from django.conf import settings
 from django.shortcuts import redirect
@@ -13,6 +14,7 @@ class AuthRedirectView(APIView):
         code = request.GET.get('code')
 
         if code:
+            # Token al
             token_url = 'https://api.intra.42.fr/oauth/token'
             data = {
                 'grant_type': 'authorization_code',
@@ -26,22 +28,27 @@ class AuthRedirectView(APIView):
                 token_response = requests.post(token_url, data=data)
                 token_response.raise_for_status()
             except requests.RequestException as e:
-                return Response({'error': 'Token alınamadı', 'details': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Token alınamadı', 'details': str(e)}, 
+                              status=status.HTTP_401_UNAUTHORIZED)
 
             access_token = token_response.json().get('access_token')
             if not access_token:
-                return Response({'error': 'Erişim token\'ı bulunamadı'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Erişim token\'ı bulunamadı'}, 
+                              status=status.HTTP_401_UNAUTHORIZED)
 
+            # Kullanıcı bilgilerini al
             profile_url = 'https://api.intra.42.fr/v2/me'
             headers = {'Authorization': f'Bearer {access_token}'}
             try:
                 profile_response = requests.get(profile_url, headers=headers)
                 profile_response.raise_for_status()
             except requests.RequestException as e:
-                return Response({'error': 'Kullanıcı verisi alınamadı', 'details': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Kullanıcı verisi alınamadı', 'details': str(e)}, 
+                              status=status.HTTP_401_UNAUTHORIZED)
 
             user_data = profile_response.json()
 
+            # Kullanıcı profilini güncelle/oluştur
             user_profile, created = UserProfile.objects.update_or_create(
                 id=user_data['id'],
                 defaults={
@@ -62,16 +69,24 @@ class AuthRedirectView(APIView):
                 }
             )
 
+            # JWT token oluştur
             refresh = RefreshToken.for_user(user_profile)
-            access_token = str(refresh.access_token)
+            jwt_token = str(refresh.access_token)
 
-            response = Response({'access_token': access_token}, status=status.HTTP_200_OK)
-            response.set_cookie('access_token', access_token, max_age=3600, httponly=False ,secure=True)
-            response = HttpResponseRedirect('https://127.0.0.1')
-            response['X-Forwarded-Proto'] = 'https'
-
+            # Response oluştur ve yönlendir
+            response = HttpResponseRedirect('https://127.0.0.1/dashboard')
+            response.status_code = 302
+            response.set_cookie('access_token', jwt_token, 
+                              max_age=3600, 
+                              httponly=False,
+                              secure=True)
             return response
-            
 
-        auth_url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.CLIENT_ID}&redirect_uri={settings.REDIRECT_URI}&response_type=code"
+        # Code yoksa auth URL'ye yönlendir
+        auth_url = (
+            f"https://api.intra.42.fr/oauth/authorize"
+            f"?client_id={settings.CLIENT_ID}"
+            f"&redirect_uri=https://127.0.0.1/authapp/auth/redirect/"
+            f"&response_type=code"
+        )
         return redirect(auth_url)

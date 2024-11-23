@@ -9,9 +9,17 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-         <div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
-    		<div class="row justify-content-between align-items-center w-100">
-        
+         <div class="container vh-100 d-flex flex-column justify-content-center align-items-center bg_color text-light">
+    <div class="row w-100 mb-3">
+    	<div class="col-12 d-flex justify-content-center">
+        	<button id="pause_button" type="button" class="btn p-0" style="width: 64px; height: 64px; border-radius: 50%;" disabled>
+            	<img id="pause_button_img" src="/static/images/pause.png" alt="Button Image" style="width: 100%; height: 100%; border-radius: 50%; pointer-events: none;">
+        	</button>
+   		</div>
+	</div>
+
+    <!-- Oyun Alanı ve Oyuncular -->
+    <div class="row justify-content-between align-items-center w-100">
         <!-- Player 1 Profile -->
         <div class="col-2 text-center">
             <div class="card bg-dark text-light p-3 border-light">

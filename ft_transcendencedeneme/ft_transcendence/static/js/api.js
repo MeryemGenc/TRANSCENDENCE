@@ -21,7 +21,7 @@ export async function fetchProtectedData() {
     }
 
     try {
-        const response = await fetch('/django/api/protected/', {
+        const response = await fetch('/api/protected/', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,  
@@ -69,7 +69,7 @@ export async function fetchUpdateUserProfile(data, selectedFile) {
         formData.append("nickname", data.nickname);
         formData.append("language_settings", data.language_settings);
 
-        const response = await fetch('/django/api/user/update-profile/', {
+        const response = await fetch('/api/user/update-profile/', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`, // Token'i ekliyoruz
@@ -119,7 +119,7 @@ export const deleteUserAccount = async () => {
     }
   
     try {
-      const response = await fetch('http://127.0.0.1:8000/django/api/user/deletegdpr/', {
+      const response = await fetch('http://127.0.0.1:8000/api/user/deletegdpr/', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

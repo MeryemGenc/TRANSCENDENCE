@@ -1,6 +1,6 @@
 
 import AbstractView from "./AbstractView.js";
-// import { loadLanguage, translate } from "./../LanguageManager.js";
+import { translate } from "./../LanguageManager.js";
 import { g_data, set_g_data } from "/static/js/api.js"; 
 // import { login_init } from "/static/js/login/login.js";
 
@@ -20,7 +20,7 @@ export default class extends AbstractView {
         return `
             <div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
                 <div class="row text-white">
-                    <h2 class="text-center mb-4">User Settings</h2>
+                    <h2 id="h_user_settings" class="text-center mb-4">${translate("h_USER_SETTINGS")}</h2>
                     <div class="text-center mb-4">
                         <div class="profile-pic mx-auto">
                             <img id="profilePreview" src=${avatar} >
@@ -32,11 +32,11 @@ export default class extends AbstractView {
 
                     <div class="form-group">
                         <div class="mb-3">
-                            <label for="inputNickname">Nickname</label>
+                            <label for="inputNickname">NICKNAME</label>
                             <input class="form-control" value=${input} type="text" id="inputNickname">
                         </div>
                         <div class="mb-4">
-                            <label for="languageSwitcher">Dil Seçimi</label>
+                            <label for="languageSwitcher">${translate("l_LANGUAGE")}</label>
                             <select class="form-control" id="language-switcher">
                                 <option value="tr">Türkçe</option>
                                 <option value="en">English</option>
@@ -47,13 +47,13 @@ export default class extends AbstractView {
 
                     <div class="row">
                         <div class="d-grid col-6 mx-auto">
-                            <button id="save_button_id_profile" class="btn btn-success btn-sm" type="button">Save</button>
+                            <button id="save_button_id_profile" class="btn btn-success btn-sm" type="button">${translate("b_SAVE")}</button>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between mt-2">
-                        <button id="deleteAccountBtn" class="btn btn-danger btn-sm col-5">Delete Account</button>
-                        <button id="logoutBtn" class="btn btn-primary btn-sm col-5">Logout</button>
+                        <button id="deleteAccountBtn" class="btn btn-danger btn-sm col-5">${translate("b_DELETE_ACCOUNT")}</button>
+                        <button id="logoutBtn" class="btn btn-primary btn-sm col-5">${translate("b_LOGOUT")}</button>
                     </div>
                 </div>
             </div>

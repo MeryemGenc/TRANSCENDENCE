@@ -38,9 +38,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-
 # settings.py
 # rest_framework_simplejwt ayarları
 SIMPLE_JWT = {

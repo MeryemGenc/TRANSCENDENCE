@@ -5,7 +5,7 @@ export let ball_size = '';
 export let difficulty_level = '';
 
 
-export function games_customization(button_check) {
+export function games_customization(button_check, tournament_flag) {
 
 	const modeSelect = document.getElementById("players_mod_select_id");
 	const ball_modeSelect = document.getElementById("ball_mod_select_id");
@@ -31,14 +31,14 @@ export function games_customization(button_check) {
 	else if (translateValue_difficulty === "Hard")
 		difficulty_level = "hard";
 
-	console.log("zorluk: " + difficulty_level);
+	if(tournament_flag)
+		return;
 	
     if (translateValue === "Two_Players") {
 		twopong3d_settings(button_check);
     } else if (translateValue === "Four_Players") {
 		fourpong3d_settings(button_check);
     }
-	// else if (translateValue ===)
 }
 
 function twopong3d_settings(button_check) {

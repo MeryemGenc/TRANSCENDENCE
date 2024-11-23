@@ -24,12 +24,14 @@ services:
       - "db:host-gateway"
     volumes:
       - ./static:/app/static
-      - ./staticfiles:/app/staticfiles # db'nin host-gateway olarak adreslenmesi için
+      - ./staticfiles:/app/staticfiles
+      - ./certs:/app/ssl:ro # db'nin host-gateway olarak adreslenmesi için
     command: bash -c "python manage.py migrate && gunicorn ft_transcendence.wsgi:application --bind 0.0.0.0:8000"
     env_file:
       - .env
     environment:
       - POSTGRES_HOST=db
+      - HTTPS=1
     ports:
       - "8000:8000"  # Django'nun 8000 portunu dışarıya açıyoruz
     depends_on:
@@ -50,7 +52,6 @@ services:
       - ./staticfiles:/usr/share/nginx/html/static:ro 
       - ./certs:/etc/nginx/ssl:ro  # Frontend dosyalarını Nginx'e bağlıyoruz
     ports:
-      - "80:80"
       - "443:443"  # Nginx'in 80 portunu dışarıya açıyoruz
     depends_on:
       - web  # Nginx, web servisine bağlıdır

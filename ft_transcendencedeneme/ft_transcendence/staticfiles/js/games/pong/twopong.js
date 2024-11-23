@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { getGameRunning, setGameRunning, navigateTo}  from "../../index.js"
-import { difficulty_level, ball_size}  from "../games.js"
+import { getGameRunning, setGameRunning, navigateTo}  from "../../index.js";
+import { difficulty_level, ball_size}  from "../games.js";
+import { translate } from "../../LanguageManager.js";
 
 
 let player1score = 0;
@@ -13,16 +14,17 @@ let keys = {};
 let boardWidth = 800, boardHeight = 600;
 let playerWidth = 8, playerHeight = 100;
 let playerSpeed = 5;
-let ballVelocityX = 3, ballVelocityY = 2;
+let ballVelocityX = 3, ballVelocityY = 3;
 let orbit;
 let animationId;
 let ballSize = 10;
+let isPaused = false;
 
 
 export function popstate_two_players_game_events()
 {
 	stopGame();
-	alert("Exiting the game.");
+	alert(translate("g_EXIT"));
 }
 
 function keyDown(event) {
@@ -35,6 +37,8 @@ function keyUp(event) {
 }
 
 function initialGame_3d() {
+
+	document.getElementById("pause_button").disabled = false;
 
 	if (ball_size === "small")
 		ballSize = 10;
@@ -128,11 +132,6 @@ function addBoundaryLines() {
 
 // Topu merkeze sıfırlar ve hareket yönünü rastgele belirler
 function resetBall() {
-    // ball.position.set(0, 0, 0);
-    // // Başlangıç yönünü rastgele belirle
-    // ballVelocityX = Math.random() > 0.5 ? 3 : -3;
-    // ballVelocityY = (Math.random() * 4) - 2; // Y yönlü hız -2 ile 2 arasında rastgele
-
 
 	let speed = 3;
 	if (difficulty_level === "easy"){
@@ -148,11 +147,19 @@ function resetBall() {
 
     ball.position.set(0, 0, 0);
 
-	const angle = Math.random() * Math.PI * 2;
+	let angle;
 
-    // X ve Y hız bileşenlerini hesapla
-    ballVelocityX = Math.cos(angle) * speed;
-    ballVelocityY = Math.sin(angle) * speed;
+	// Sağ çapraz (0 - π/6 ve 11π/6 - 2π arası)
+	if (Math.random() < 0.5) {
+	    angle = Math.random() * (Math.PI / 6) + (Math.random() < 0.5 ? 0 : 11 * Math.PI / 6);
+	} 
+	// Sol çapraz (5π/6 - π ve π - 7π/6 arası)
+	else {
+	    angle = Math.random() * (Math.PI / 6) + 5 * Math.PI / 6;
+	}
+
+	ballVelocityX = Math.cos(angle) * speed;
+	ballVelocityY = Math.sin(angle) * speed;
 }
 
 export function startGame() {
@@ -161,16 +168,40 @@ export function startGame() {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
+	isPaused = false;
 	playerSpeed = 5;
     ballVelocityX = 3;
-    ballVelocityY = 2;
+    ballVelocityY = 3;
     setGameRunning(true);
     initialGame_3d();
     animate();
 }
 
+
+function detectCollisionRegion(ballY, paddleY, paddleHeight) {
+    const thirdHeight = paddleHeight / 3;
+
+    const upperBoundary = paddleY + (paddleHeight / 2);
+    const middleBoundaryTop = paddleY + (thirdHeight / 2);
+    const middleBoundaryBottom = paddleY - (thirdHeight / 2);
+    const lowerBoundary = paddleY - (paddleHeight / 2);
+
+    if (ballY > middleBoundaryTop && ballY <= upperBoundary) {
+        return 'upper';
+    } else if (ballY >= middleBoundaryBottom && ballY <= middleBoundaryTop) {
+        return 'middle';
+    } else if (ballY < middleBoundaryBottom && ballY >= lowerBoundary) {
+        return 'lower';
+    } else {
+        return 'none';
+    }
+}
+
+
 // Animasyon döngüsü
 function animate() {
+
+	if (isPaused) return;
     
     animationId = requestAnimationFrame(animate);
     orbit.update();
@@ -182,17 +213,15 @@ function animate() {
         console.log("Renderer, scene or camera is not defined.");
         return;
     }
-    // console.log("animate");
 
     renderer.render(scene, camera);
 }
 
+
+
 // Oyun mantığını günceller
 function updateGameLogic() {
-    // if (!getGameRunning())
-    //     return ;
-    // console.log("update");
-    // Oyuncu1 hareketi
+   
     if (keys['w']) {
         player1.position.y += playerSpeed;
         if (player1.position.y + playerHeight / 2 > boardHeight / 2) {
@@ -238,20 +267,36 @@ function updateGameLogic() {
     if (ball.position.x - ball.geometry.parameters.radius <= player1.position.x + playerWidth / 2 &&
         ball.position.y <= player1.position.y + playerHeight / 2 &&
         ball.position.y >= player1.position.y - playerHeight / 2) {
+
         ball.position.x = player1.position.x + playerWidth / 2 + ball.geometry.parameters.radius;
-        ballVelocityX = -ballVelocityX;
-        // İsteğe bağlı: Her çarpışmada hız artır
-        // increaseBallSpeed();
+		const region = detectCollisionRegion(ball.position.y, player1.position.y, 100);
+    	if (region === 'upper') {
+    	    ballVelocityY += 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'lower') {
+    	    ballVelocityY -= 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'middle') {
+    	    ballVelocityX *= -1;
+    	}
     }
 
     // Oyuncu2 ile çarpışma
     if (ball.position.x + ball.geometry.parameters.radius >= player2.position.x - playerWidth / 2 &&
         ball.position.y <= player2.position.y + playerHeight / 2 &&
         ball.position.y >= player2.position.y - playerHeight / 2) {
+
         ball.position.x = player2.position.x - playerWidth / 2 - ball.geometry.parameters.radius;
-        ballVelocityX = -ballVelocityX;
-        // İsteğe bağlı: Her çarpışmada hız artır
-        // increaseBallSpeed();
+		const region = detectCollisionRegion(ball.position.y, player2.position.y, 100);
+    	if (region === 'upper') {
+    	    ballVelocityY += 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'lower') {
+    	    ballVelocityY -= 1;
+    	    ballVelocityX *= -1;
+    	} else if (region === 'middle') {
+    	    ballVelocityX *= -1;
+    	}
     }
 
     // Puanlama
@@ -276,10 +321,10 @@ function updateGameLogic() {
     // score kontrol
     if (player1score >= 1 || player2score >= 1) {
 		if (player1score == 1){
-			alert("Player 1 Win!");
+			alert("Player 1 " + translate("g_WIN"));
 		}
 		else if(player2score == 1) {
-			alert("Player 2 Win!");
+			alert("Player 2 " + translate("g_WIN"));
 		}
 		stopGame();
 	return;
@@ -305,21 +350,6 @@ function player1_up_point()
 	}, 500);
 	plyr2scr.textContent = player1score
 }
-
-// Topun hızını artırır (isteğe bağlı)
-// function increaseBallSpeed() {
-//     // Hızı çok hızlı olmasını engellemek için sınır koy
-//     const maxSpeed = 10;
-//     ballVelocityX = ballVelocityX > 0 ? Math.min(ballVelocityX + 0.5, maxSpeed) : Math.max(ballVelocityX - 0.5, -maxSpeed);
-//     ballVelocityY = ballVelocityY > 0 ? Math.min(ballVelocityY + 0.5, maxSpeed) : Math.max(ballVelocityY - 0.5, -maxSpeed);
-// }
-
-// Puanları günceller
-
-// function updateScore() {
-//     scoreElement1.innerText = `Oyuncu 1: ${player1Score}`;
-//     scoreElement2.innerText = `Oyuncu 2: ${player2Score}`;
-// }
 
 export function stopGame() {
     // Oyun devam ediyorsa durdur
@@ -375,3 +405,22 @@ function cleanUpScene() {
     scene = null;
     camera = null;
 }
+
+export function pauseGame() {
+    isPaused = true;
+    cancelAnimationFrame(animationId);
+    console.log("Game paused");
+	document.getElementById("pause_button_img").src = "./static/images/resume.png";
+	return isPaused;
+}
+
+export function resumeGame() {
+    if (isPaused) {
+        isPaused = false;
+        animate(); // Döngüyü tekrar başlat
+        console.log("Game resumed");
+		document.getElementById("pause_button_img").src = "./static/images/pause.png";
+		return isPaused;
+    }
+}
+

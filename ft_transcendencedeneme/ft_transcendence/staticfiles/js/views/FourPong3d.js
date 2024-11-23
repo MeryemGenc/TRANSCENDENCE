@@ -10,11 +10,23 @@ export default class extends AbstractView {
     async getHtml() {
         return `
 		
-		<div class="container bg_color d-flex justify-content-center align-items-center" style="height: 100vh;">
+		     
+
+		<div class="container bg_color d-flex justify-content-center align-items-center" style="height: 100vh;">	
+
+		<div class="position-absolute dynamic-top" style="left: 50%; transform: translate(-50%, -50%);">
+    		<button id="pause_button_four" type="button" class="btn p-0" style="width: 64px; height: 64px; border-radius: 50%;" disabled>
+        		<img id="pause_button_four_img" src="/static/images/pause.png" alt="Button Image" style="width: 100%; height: 100%; border-radius: 50%; pointer-events: none;">
+    		</button>
+		</div>
+			
 		<!-- Oyun Alanı (600px x 600px siyah kare) -->
 		<div id="four_pong_board" class="position-relative" style="width: 600px; height: 600px; background-color: black;">
 		<button data-translate="PLAY" id="four_pong_play_button" type="button" class="btn btn-info" data-mdb-ripple-init>${translate("PLAY")}</button>
 	  
+
+
+			
 		  <!-- Sol Kart (Profil Resmi, Nickname ve Score) -->
 		  <div class="position-absolute" style="top: 50%; left: -110px; transform: translateY(-50%);">
 			<div class="card bg-dark text-light" style="width: 100px; height: 200px;">
@@ -25,6 +37,8 @@ export default class extends AbstractView {
 			  <div id="four_pong_score_1" class="text-center" style="color: white; font-weight: bold;">0</div> <!-- Score -->
 			</div>
 		  </div>
+
+		  
 	  
 		  <!-- Üst Kart (Profil Resmi, Nickname ve Score) -->
 		  <div class="position-absolute" style="top: -110px; left: 50%; transform: translateX(-50%);">

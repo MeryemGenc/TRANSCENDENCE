@@ -1,5 +1,5 @@
 
-import { initializeLanguage } from './LanguageManager.js';
+import { initializeLanguage, translate } from './LanguageManager.js';
 import { login_init } from './login/login.js';
 
 export let g_data = null;
@@ -9,7 +9,7 @@ export function set_g_data(data)
     g_data = data;
 }
 
-export async function fetchProtectedData() { // nerde çağırılacak ???
+export async function fetchProtectedData() {  
     const token = document.cookie
         .split('; ')
         .find(row => row.startsWith('access_token='))
@@ -24,25 +24,20 @@ export async function fetchProtectedData() { // nerde çağırılacak ???
         const response = await fetch('/api/protected/', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, // Token'i ekliyoruz
+                'Authorization': `Bearer ${token}`,  
                 'Content-Type': 'application/json',
             },
         });
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Kullanıcı verisi:', data);
-            // console.log('nick', data.username);
-            // console.log('lang', data.language_settings);
-
-            // Veriyi localStorage'a kaydediyoruz
+            console.log('Kullanıcı verisi:', data);  
             localStorage.setItem('g_data', JSON.stringify(data));
             
             // LANGUAGE
             localStorage.setItem('language', data.language_settings);
             initializeLanguage();
-            g_data = data;
-            // console.log('fetchprotecteddata - g_data:', g_data.avatar_path);
+            g_data = data; 
             
             login_init();
         } else {
@@ -56,44 +51,6 @@ export async function fetchProtectedData() { // nerde çağırılacak ???
 // Fonksiyonu çağırarak veriyi alabiliriz
 fetchProtectedData();
 
-// export async function fetchUpdateUserProfile(data) {
-//     const token = document.cookie
-//         .split('; ')
-//         .find(row => row.startsWith('access_token='))
-//         ?.split('=')[1];
-
-//     if (!token) {
-//         console.log('Kullanıcı oturum açmamış');
-//         return;
-//     }
-
-//     try {
-//         const response = await fetch('/api/user/update-profile/', {
-//             method: 'POST',
-//             headers: {
-//                 'Authorization': `Bearer ${token}`, // Token'i ekliyoruz
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(data) // Gönderilecek veriyi JSON formatında ekliyoruz
-//         });
-
-//         if (response.ok) {
-//             const responseData = await response.json();
-//             console.log('Güncellenmiş Kullanıcı Bilgileri:', responseData);
-//             // Güncellenen verileri g_data içine eklemek için
-//             g_data = { ...g_data, ...responseData };
-//             // console.log("g_data - avatar: " + g_data.avatar_path);
-//             // console.log("data - avatar: " + data.avatar_path);
-//             // g_data.avatar_path = data.avatar_path;
-//         } else {
-//             console.log('Güncelleme başarısız:', response.status);
-//         }
-//     } catch (error) {
-//         console.error('Fetch hatası:', error);
-//     }
-
-    
-// }
 
 export async function fetchUpdateUserProfile(data, selectedFile) {
     const token = document.cookie
@@ -112,11 +69,6 @@ export async function fetchUpdateUserProfile(data, selectedFile) {
         formData.append("nickname", data.nickname);
         formData.append("language_settings", data.language_settings);
 
-        // // Eğer yeni bir avatar dosyası seçildiyse, bunu da ekliyoruz
-        // if (selectedFile) {
-        //     formData.append("avatar_path", selectedFile);
-        // }
-
         const response = await fetch('/api/user/update-profile/', {
             method: 'POST',
             headers: {
@@ -129,10 +81,7 @@ export async function fetchUpdateUserProfile(data, selectedFile) {
             const responseData = await response.json();
             console.log('Güncellenmiş Kullanıcı Bilgileri:', responseData);
             // Güncellenen verileri g_data içine eklemek için
-            g_data = { ...g_data, ...responseData };
-            // console.log("g_data - avatar: " + g_data.avatar_path);
-            // console.log("data - avatar: " + data.avatar_path);
-            // g_data.avatar_path = responseData.avatar_path; // Yeni avatar yolu
+            g_data = { ...g_data, ...responseData }; 
         } else {
             console.log('Güncelleme başarısız:', response.status);
         }
@@ -165,7 +114,7 @@ export const deleteUserAccount = async () => {
     const token = getCookie('access_token');  // JWT token'ı çerezden alıyoruz
   
     if (!token) {
-      alert("Token bulunamadı! Lütfen tekrar giriş yapın.");
+      alert(translate("a_TOKEN"));
       return;
     }
   
@@ -181,54 +130,18 @@ export const deleteUserAccount = async () => {
       setTimeout(1000);
 
       if (response.ok) {
-        alert("Hesap başarıyla silindi.");
+        alert(translate("a_DELETE_SUCCESS"));
         // Kullanıcıyı çıkış yapmaya yönlendirebilirsiniz
       } else {
         const data = await response.json();
-        alert(`Hesap silinemedi: ${data.error || 'Bilinmeyen bir hata oluştu'}`);
+        alert(translate("a_DELETE_FAIL"));
       }
     } catch (error) {
-      alert(`Bir hata oluştu: ${error.message}`);
+      alert(translate("a_ERROR"));
     }
 
     
   };
-
-
-  
-// export async function uploadProfileImage() {
-//     const input = document.getElementById('profileImageUpload');
-//     const file = input.files[0];
-
-//     if (!file) {
-//         alert("Lütfen bir fotoğraf seçin.");
-//         return;
-//     }
-
-//     // FormData ile dosya verisini hazırlıyoruz
-//     const formData = new FormData();
-//     formData.append('profile_image', file);
-
-//     try {
-//         const response = await fetch('/api/upload-profile-image/', {
-//             method: 'POST',
-//             credentials: 'include', // Cookie'lerin gönderilmesini sağlar
-//             body: formData
-//         });
-
-//         if (response.ok) {
-//             const data = await response.json();
-//             alert("Fotoğraf başarıyla yüklendi.");
-//         } else {
-//             const errorData = await response.json();
-//             console.error("Hata:", errorData);
-//             alert("Fotoğraf yüklenirken bir hata oluştu.");
-//         }
-//     } catch (error) {
-//         console.error("İstek başarısız:", error);
-//         alert("Bir bağlantı hatası oluştu.");
-//     }
-// }
 
 
 

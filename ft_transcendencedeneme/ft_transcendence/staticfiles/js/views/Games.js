@@ -4,7 +4,7 @@ import { translate } from "./../LanguageManager.js";
 export default class extends AbstractView {
     constructor() {
         super();
-        this.setTitle("Games");
+        this.setTitle("Game");
     }
 
     async getHtml() {
@@ -12,7 +12,7 @@ export default class extends AbstractView {
 		<div class="container vh-100 d-flex justify-content-center align-items-center bg_color text-light">
         <div class="container text-white">
             <div class="row justify-content-center position-absolute top-50 start-50 translate-middle text-center">
-                <h1 data-translate="GAMES">${translate("GAMES")}</h1>
+                <h1 data-translate="GAME">${translate("GAME")}</h1>
                 <div class="col-xl-4 mt-5">
                     <div class="card bg-dark border-white">
                         <img src="static/images/PONG.png" class="card-img-top" alt="Game-1">

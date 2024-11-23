@@ -2,7 +2,7 @@
 {
     "settings_title": "SETTINGS",
     "settings_description": "SETTINGS description",
-    "GAMES": "GAMES",
+    "GAME": "GAME",
     "Four_Players": "Four Players",
     "Two_Players": "Two Players",
     "Dark_Theme": "Dark Theme",
@@ -16,5 +16,23 @@
     "n_HOME": "HOME",
     "n_LOGIN": "LOGIN",
     "n_GAMES": "GAMES",
-    "n_SETTINGS": "SETTINGS"
-}
+    "n_SETTINGS": "SETTINGS",
+    "b_SAVE": "SAVE",
+    "b_DELETE_ACCOUNT": "DELETE ACCOUNT",
+    "b_LOGOUT": "LOGOUT",
+    "h_USER_SETTINGS": "USER SETTINGS",
+    "l_LANGUAGE": "LANGUAGE",
+    "a_TOKEN": "Token not found! Please log in.",
+    "a_DELETE_SUCCESS": "The account has been successfully deleted.",
+    "a_DELETE_FAIL": "Account could not be deleted",
+    "a_ERROR": "An error occurred",
+    "a_LOGOUT_SUCCESS": "You have been logged out successfully.",
+    "a_CHANGES_SUCCESS": "The changes are saved.",
+    "a_ENTER_NICK": "Please enter a nickname.",
+    "g_EXIT": "Exiting the game.",
+    "g_WIN": "win!",
+    "t_EXIT": "Exiting the tournament.",
+    "t_PLAYERS_NOT_UNIQUE": "Players are not unique",
+    "t_PLAYERS_SAVE_SUCCESS": "Players saved successfully!",
+    "t_FILL_NICK": "Please fill in all nickname fields."
+} 

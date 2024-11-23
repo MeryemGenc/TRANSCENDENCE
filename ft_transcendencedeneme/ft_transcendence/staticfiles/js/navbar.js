@@ -5,12 +5,16 @@ export function nav_label_change() {
     // const navbar_main_span = document.querySelector('#navbar_main_span');
     // const navbar_label_span = document.querySelector('#navbar_label_span');
     const navbar = document.querySelector('#main_navbar');
+    const login = document.querySelector('#login_button');
+
+    
     
     try {
         // console.log("var");
         navbar.style = "display: flex!important;";
         navbar_label_span.textContent = (g_data && g_data.username) || 'name';
         profile_img_id.src = (g_data && g_data.medium_image) || "/static/images/userprofile.png";
+
     } catch (error) {
         console.log("navbar change err: ", error);
     }
